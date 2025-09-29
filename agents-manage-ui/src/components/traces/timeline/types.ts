@@ -74,8 +74,6 @@ export interface ActivityItem {
   aiStreamTextModel?: string;
   aiStreamTextProvider?: string;
   aiStreamTextOperationId?: string;
-  traceId?: string;
-  // OTEL status fields
   otelStatusCode?: string;
   otelStatusDescription?: string;
 }
