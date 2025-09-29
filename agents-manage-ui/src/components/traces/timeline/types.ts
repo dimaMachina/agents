@@ -27,6 +27,7 @@ export type ActivityKind = (typeof ACTIVITY_TYPES)[keyof typeof ACTIVITY_TYPES];
 export interface ActivityItem {
   id: string;
   type: ActivityKind;
+  name?: string;
   description: string;
   timestamp: string;
   agentId?: string;
@@ -73,6 +74,10 @@ export interface ActivityItem {
   aiStreamTextModel?: string;
   aiStreamTextProvider?: string;
   aiStreamTextOperationId?: string;
+  traceId?: string;
+  // OTEL status fields
+  otelStatusCode?: string;
+  otelStatusDescription?: string;
 }
 
 export interface ToolCall {
@@ -121,6 +126,7 @@ export interface ConversationDetail {
   traceId?: string;
   graphId?: string;
   graphName?: string;
+  spansWithErrorsCount?: number;
   allSpanAttributes?: Array<{
     spanId: string;
     traceId: string;
@@ -133,16 +139,6 @@ export interface ConversationDetail {
     error: string;
     failureReason: string;
     timestamp: string;
-  }>;
-  contextErrors?: Array<{
-    spanId: string;
-    timestamp: string;
-    statusDescription: string;
-  }>;
-  agentGenerationErrors?: Array<{
-    spanId: string;
-    timestamp: string;
-    statusDescription: string;
   }>;
 }
 
