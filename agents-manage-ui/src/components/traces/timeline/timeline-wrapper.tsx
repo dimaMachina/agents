@@ -22,6 +22,8 @@ function panelTitle(selected: SelectedPanel) {
   switch (selected.type) {
     case 'ai_generation':
       return 'AI generation details';
+    case 'agent_generation':
+      return 'Agent generation details';
     case 'user_message':
       return 'User message details';
     case 'ai_assistant_message':
@@ -136,7 +138,7 @@ export function TimelineWrapper({
   retryConnection,
   refreshOnce,
   showConversationTracesLink = false,
-  conversationId
+  conversationId,
 }: TimelineWrapperProps) {
   const [selected, setSelected] = useState<SelectedPanel | null>(null);
   const [panelVisible, setPanelVisible] = useState(false);
@@ -157,12 +159,12 @@ export function TimelineWrapper({
     }
   }, [selected]);
 
-    // Clear selected panel when conversation changes
-    useEffect(() => {
-      if (conversationId) {
-        setSelected(null);
-      }
-    }, [conversationId]);
+  // Clear selected panel when conversation changes
+  useEffect(() => {
+    if (conversationId) {
+      setSelected(null);
+    }
+  }, [conversationId]);
 
   // Memoize activities calculation to prevent expensive operations on every render
   const activities = useMemo(() => {
