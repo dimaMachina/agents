@@ -28,6 +28,7 @@
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
     "db:migrate": "drizzle-kit migrate",
+    "db:drop": "drizzle-kit drop",
     "db:clean": "tsx src/db/clean.ts",
     "db:delete": "tsx src/db/delete.ts",
     "db:reset": "pnpm db:delete && pnpm db:push",
@@ -77,7 +78,6 @@
     "@types/node": "^20.11.24",
     "@vitest/coverage-v8": "^2.0.0",
     "clean-package": "^2.2.0",
-    "drizzle-kit": "^0.31.4",
     "tsx": "^4.19.2",
     "typescript": "^5.9.2",
     "vitest": "^3.1.4"
