@@ -2,17 +2,23 @@ import { anthropic, createAnthropic } from '@ai-sdk/anthropic';
 import { createGateway, gateway } from '@ai-sdk/gateway';
 import { createGoogleGenerativeAI, google } from '@ai-sdk/google';
 import { createOpenAI, openai } from '@ai-sdk/openai';
+import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
 import { createOpenRouter, openrouter } from '@openrouter/ai-sdk-provider';
-import type { LanguageModel, Provider } from 'ai';
+import type { LanguageModel } from 'ai';
 
-import { getLogger } from '../logger';
+import type { ModelSettings } from '../validation/schemas';
+import { getLogger } from './logger';
 
 const logger = getLogger('ModelFactory');
 
-export interface ModelSettings {
-  model?: string;
-  providerOptions?: Record<string, unknown>;
-}
+// NVIDIA NIM default provider instance
+const nimDefault = createOpenAICompatible({
+  name: 'nim',
+  baseURL: 'https://integrate.api.nvidia.com/v1',
+  headers: {
+    Authorization: `Bearer ${process.env.NIM_API_KEY}`,
+  },
+});
 
 /**
  * Factory for creating AI SDK language models from configuration
@@ -21,8 +27,12 @@ export interface ModelSettings {
 export class ModelFactory {
   /**
    * Create a provider instance with custom configuration
+   * Returns a provider with at least languageModel method
    */
-  private static createProvider(provider: string, config: Record<string, unknown>): Provider {
+  private static createProvider(
+    provider: string,
+    config: Record<string, unknown>
+  ): { languageModel: (modelId: string) => LanguageModel } {
     switch (provider) {
       case 'anthropic':
         return createAnthropic(config);
@@ -31,17 +41,50 @@ export class ModelFactory {
       case 'google':
         return createGoogleGenerativeAI(config);
       case 'openrouter':
-        return {
-          ...createOpenRouter(config),
-          textEmbeddingModel: () => {
-            throw new Error('OpenRouter does not support text embeddings');
-          },
-          imageModel: () => {
-            throw new Error('OpenRouter does not support image generation');
-          },
-        };
+        return createOpenRouter(config);
       case 'gateway':
         return createGateway(config);
+      case 'nim': {
+        const nimConfig = {
+          name: 'nim',
+          baseURL: 'https://integrate.api.nvidia.com/v1',
+          headers: {
+            Authorization: `Bearer ${process.env.NIM_API_KEY}`,
+          },
+          ...config,
+        };
+        return createOpenAICompatible(nimConfig);
+      }
+      case 'custom': {
+        if (!config.baseURL && !config.baseUrl) {
+          throw new Error(
+            'Custom provider requires baseURL. Please provide it in providerOptions.baseURL or providerOptions.baseUrl'
+          );
+        }
+        const customConfig = {
+          name: 'custom',
+          baseURL: (config.baseURL || config.baseUrl) as string,
+          headers: {
+            ...(process.env.CUSTOM_LLM_API_KEY && {
+              Authorization: `Bearer ${process.env.CUSTOM_LLM_API_KEY}`,
+            }),
+            ...((config as any).headers || {}),
+          },
+          ...config,
+        };
+        logger.info(
+          {
+            config: {
+              baseURL: customConfig.baseURL,
+              hasApiKey: !!process.env.CUSTOM_LLM_API_KEY,
+              apiKeyPrefix: `${process.env.CUSTOM_LLM_API_KEY?.substring(0, 10)}...`,
+              headers: Object.keys(customConfig.headers || {}),
+            },
+          },
+          'Creating custom OpenAI-compatible provider'
+        );
+        return createOpenAICompatible(customConfig);
+      }
       default:
         throw new Error(`Unsupported provider: ${provider}`);
     }
@@ -64,8 +107,20 @@ export class ModelFactory {
       providerConfig.baseURL = providerOptions.baseUrl || providerOptions.baseURL;
     }
 
+    if (providerOptions.headers) {
+      providerConfig.headers = providerOptions.headers;
+    }
+
     if (providerOptions.gateway) {
       Object.assign(providerConfig, providerOptions.gateway);
+    }
+
+    if (providerOptions.nim) {
+      Object.assign(providerConfig, providerOptions.nim);
+    }
+
+    if (providerOptions.custom) {
+      Object.assign(providerConfig, providerOptions.custom);
     }
 
     return providerConfig;
@@ -118,11 +173,17 @@ export class ModelFactory {
         return openrouter(modelName);
       case 'gateway':
         return gateway(modelName);
+      case 'nim':
+        return nimDefault(modelName);
+      case 'custom':
+        throw new Error(
+          'Custom provider requires configuration. Please provide baseURL in providerOptions.custom.baseURL or providerOptions.baseURL'
+        );
       default:
         throw new Error(
           `Unsupported provider: ${provider}. ` +
             `Supported providers are: ${ModelFactory.BUILT_IN_PROVIDERS.join(', ')}. ` +
-            `To access other models, use OpenRouter (openrouter/model-id) or Vercel AI Gateway (gateway/model-id).`
+            `To access other models, use OpenRouter (openrouter/model-id), Vercel AI Gateway (gateway/model-id), NVIDIA NIM (nim/model-id), or Custom OpenAI-compatible (custom/model-id).`
         );
     }
   }
@@ -136,6 +197,8 @@ export class ModelFactory {
     'google',
     'openrouter',
     'gateway',
+    'nim',
+    'custom',
   ] as const;
 
   /**
@@ -153,13 +216,13 @@ export class ModelFactory {
         throw new Error(
           `Unsupported provider: ${normalizedProvider}. ` +
             `Supported providers are: ${ModelFactory.BUILT_IN_PROVIDERS.join(', ')}. ` +
-            `To access other models, use OpenRouter (openrouter/model-id) or Vercel AI Gateway (gateway/model-id).`
+            `To access other models, use OpenRouter (openrouter/model-id), Vercel AI Gateway (gateway/model-id), NVIDIA NIM (nim/model-id), or Custom OpenAI-compatible (custom/model-id).`
         );
       }
 
       return {
         provider: normalizedProvider,
-        modelName: modelParts.join('/'), // In case model name has slashes
+        modelName: modelParts.join('/'),
       };
     }
 
@@ -175,7 +238,16 @@ export class ModelFactory {
       return {};
     }
 
-    const excludedKeys = ['apiKey', 'baseURL', 'baseUrl', 'maxDuration'];
+    const excludedKeys = [
+      'apiKey',
+      'baseURL',
+      'baseUrl',
+      'maxDuration',
+      'headers',
+      'gateway',
+      'nim',
+      'custom',
+    ];
 
     const params: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(providerOptions)) {
@@ -213,4 +285,35 @@ export class ModelFactory {
       ...(maxDuration !== undefined && { maxDuration }),
     };
   }
+
+  /**
+   * Validate model settingsuration
+   * Basic validation only - let AI SDK handle parameter-specific validation
+   */
+  static validateConfig(config: ModelSettings): string[] {
+    const errors: string[] = [];
+
+    if (!config.model) {
+      errors.push('Model name is required');
+    }
+
+    if (config.providerOptions) {
+      if (config.providerOptions.apiKey) {
+        errors.push(
+          'API keys should not be stored in provider options. ' +
+            'Use environment variables (ANTHROPIC_API_KEY, OPENAI_API_KEY) or credential store instead.'
+        );
+      }
+
+      if (config.providerOptions.maxDuration !== undefined) {
+        const maxDuration = config.providerOptions.maxDuration;
+        if (typeof maxDuration !== 'number' || maxDuration <= 0) {
+          errors.push('maxDuration must be a positive number (in seconds)');
+        }
+      }
+    }
+
+    return errors;
+  }
 }
+

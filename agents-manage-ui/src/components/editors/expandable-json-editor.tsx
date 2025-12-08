@@ -11,11 +11,13 @@ type JsonEditorProps = ComponentPropsWithoutRef<typeof JsonEditor>;
 interface ExpandableJsonEditorProps {
   name: string;
   value: NonNullable<JsonEditorProps['value']>;
-  onChange: NonNullable<JsonEditorProps['onChange']>;
+  onChange?: JsonEditorProps['onChange'];
   className?: JsonEditorProps['className'];
   label?: string;
   error?: string;
   placeholder?: JsonEditorProps['placeholder'];
+  readOnly?: boolean;
+  editorOptions?: JsonEditorProps['editorOptions'];
 }
 
 // Shared JSON validation logic
@@ -59,11 +61,14 @@ export function ExpandableJsonEditor({
   label = 'JSON',
   placeholder = 'Enter valid JSON...',
   error: externalError,
+  readOnly,
+  editorOptions,
 }: ExpandableJsonEditorProps) {
   const { error: internalError } = useJsonValidation(value);
+  const handleChange = onChange ?? (() => {});
   const { handleFormat, canFormat } = useJsonFormat(
     value,
-    onChange,
+    handleChange,
     !!(externalError || internalError)
   );
   const [open, setOpen] = useState(false);
@@ -80,27 +85,31 @@ export function ExpandableJsonEditor({
       className={className}
       hasError={!!error}
       actions={
-        <Button
-          type="button"
-          onClick={handleFormat}
-          disabled={!canFormat}
-          variant="link"
-          size="sm"
-          className="text-xs rounded-sm h-6"
-        >
-          Format
-        </Button>
+        !readOnly && (
+          <Button
+            type="button"
+            onClick={handleFormat}
+            disabled={!canFormat}
+            variant="link"
+            size="sm"
+            className="text-xs rounded-sm h-6"
+          >
+            Format
+          </Button>
+        )
       }
     >
       <JsonEditor
         uri={uri}
         value={value}
-        onChange={onChange}
+        onChange={handleChange}
         placeholder={placeholder}
         aria-invalid={error ? 'true' : undefined}
         className={cn(!open && error && 'max-h-96')}
         hasDynamicHeight={!open}
         aria-labelledby={id}
+        readOnly={readOnly}
+        editorOptions={editorOptions}
       />
       {error && <p className="text-sm text-red-600">{error}</p>}
     </ExpandableField>

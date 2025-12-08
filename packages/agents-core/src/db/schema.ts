@@ -58,7 +58,7 @@ const subAgentScoped = {
 
 const uiProperties = {
   name: varchar('name', { length: 256 }).notNull(),
-  description: text('description').notNull(),
+  description: text('description'),
 };
 
 const timestamps = {

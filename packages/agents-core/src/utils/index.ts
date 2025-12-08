@@ -7,6 +7,7 @@ export * from './error';
 export * from './execution';
 export * from './logger';
 export * from './mcp-client';
+export * from './model-factory';
 export * from './schema-conversion';
 export * from './service-token-auth';
 export * from './tracer-factory';
