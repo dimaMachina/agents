@@ -143,7 +143,6 @@ program
   .option('--port <port>', 'Port to run the server on', '3000')
   .option('--host <host>', 'Host to bind the server to', 'localhost')
   .option('--build', 'Build the Dashboard UI for production', false)
-  .option('--export', 'Export the Next.js project source files', false)
   .option('--output-dir <dir>', 'Output directory for build files', './inkeep-dev')
   .option('--path', 'Output the path to the Dashboard UI', false)
   .option('--open-browser', 'Open the browser', false)
@@ -154,7 +153,6 @@ program
       build: options.build,
       outputDir: options.outputDir,
       path: options.path,
-      export: options.export,
       openBrowser: options.openBrowser,
     });
   });
