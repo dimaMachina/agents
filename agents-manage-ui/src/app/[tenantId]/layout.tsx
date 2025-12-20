@@ -1,5 +1,3 @@
-'use client';
-
 import { AppSidebarProvider } from '@/components/sidebar-nav/app-sidebar-provider';
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
