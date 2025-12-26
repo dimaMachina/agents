@@ -1,6 +1,5 @@
 import { type FC, Suspense } from 'react';
 import FullPageError from '@/components/errors/full-page-error';
-import { BodyTemplate } from '@/components/layout/body-template';
 import { getFullAgentAction } from '@/lib/actions/agent-full';
 import { fetchArtifactComponentsAction } from '@/lib/actions/artifact-components';
 import { fetchCredentialsAction } from '@/lib/actions/credentials';
@@ -9,8 +8,9 @@ import { fetchExternalAgentsAction } from '@/lib/actions/external-agents';
 import { fetchToolsAction } from '@/lib/actions/tools';
 import type { FullAgentDefinition } from '@/lib/types/agent-full';
 import { createLookup } from '@/lib/utils';
-import { AgentSkeleton } from './loading';
+import AgentSkeleton from './loading';
 import { Agent } from './page.client';
+import { Breadcrumb } from '@/components/layout/breadcrumb';
 
 export const dynamic = 'force-dynamic';
 
@@ -85,18 +85,14 @@ const AgentPage: FC<PageProps<'/[tenantId]/projects/[projectId]/agents/[agentId]
   }
 
   return (
-    <BodyTemplate
-      breadcrumbs={[
-        { label: 'Agents', href: `/${tenantId}/projects/${projectId}/agents` },
-        agent.data.name,
-      ]}
-      // Remove inner div from the layout so the p-6 padding doesn’t apply
-      className="contents"
+    <Breadcrumb
+      label={agent.data.name}
+      href={`/${tenantId}/projects/${projectId}/agents/${agentId}`}
     >
       <Suspense fallback={<AgentSkeleton />}>
         <AgentData agent={agent.data} tenantId={tenantId} projectId={projectId} />
       </Suspense>
-    </BodyTemplate>
+    </Breadcrumb>
   );
 };
 
