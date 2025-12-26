@@ -4,17 +4,12 @@ import { AlertTriangle, ArrowLeft, type LucideIcon, RefreshCw } from 'lucide-rea
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { BodyTemplate } from '@/components/layout/body-template';
 import { Button } from '@/components/ui/button';
 import { buildLoginUrlWithCurrentPath } from '@/lib/utils/auth-redirect';
 
 export default function FullPageError({ statusCode, errorCode, ...props }: FullPageErrorProps) {
   const resolvedStatusCode = statusCode ?? getStatusCodeFromErrorCode(errorCode);
-  return (
-    <BodyTemplate breadcrumbs={[resolvedStatusCode ? `${resolvedStatusCode} Error` : 'Error']}>
-      <ErrorContent statusCode={resolvedStatusCode} errorCode={errorCode} {...props} />
-    </BodyTemplate>
-  );
+  return <ErrorContent statusCode={resolvedStatusCode} errorCode={errorCode} {...props} />;
 }
 
 function hasStatusCode(obj: unknown): obj is { status: number } {
