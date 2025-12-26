@@ -1,7 +1,6 @@
 'use client';
 
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import { BodyTemplate } from '@/components/layout/body-template';
 import { ToolCallsBreakdown } from '@/components/traces/tool-calls-breakdown';
 
 export default function ToolCallsPage() {
@@ -20,14 +19,5 @@ export default function ToolCallsPage() {
     router.push(tracesUrl);
   };
 
-  return (
-    <BodyTemplate
-      breadcrumbs={[
-        { label: 'Traces', href: `/${tenantId}/projects/${projectId}/traces` },
-        'Tool Calls Breakdown',
-      ]}
-    >
-      <ToolCallsBreakdown onBack={handleBackToTraces} />
-    </BodyTemplate>
-  );
+  return <ToolCallsBreakdown onBack={handleBackToTraces} />;
 }

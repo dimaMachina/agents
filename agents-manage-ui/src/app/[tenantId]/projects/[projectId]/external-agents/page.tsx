@@ -2,7 +2,6 @@ import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import FullPageError from '@/components/errors/full-page-error';
 import { ExternalAgentsList } from '@/components/external-agents/external-agents-list';
-import { BodyTemplate } from '@/components/layout/body-template';
 import EmptyState from '@/components/layout/empty-state';
 import { PageHeader } from '@/components/layout/page-header';
 import { Button } from '@/components/ui/button';
@@ -19,7 +18,7 @@ async function ExternalAgentsPage({
 
   try {
     const externalAgents = await fetchExternalAgents(tenantId, projectId);
-    const content = externalAgents.length ? (
+    return externalAgents.length ? (
       <>
         <PageHeader
           title="External agents"
@@ -46,7 +45,6 @@ async function ExternalAgentsPage({
         linkText="Create external agent"
       />
     );
-    return <BodyTemplate breadcrumbs={['External agents']}>{content}</BodyTemplate>;
   } catch (error) {
     return <FullPageError errorCode={getErrorCode(error)} context="external agents" />;
   }

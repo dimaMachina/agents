@@ -1,7 +1,6 @@
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import FullPageError from '@/components/errors/full-page-error';
-import { BodyTemplate } from '@/components/layout/body-template';
 import EmptyState from '@/components/layout/empty-state';
 import { PageHeader } from '@/components/layout/page-header';
 import { MCPToolsList } from '@/components/mcp-servers/mcp-tools-list';
@@ -18,7 +17,7 @@ async function MCPServersPage({
 
   try {
     const tools = await fetchMCPTools(tenantId, projectId);
-    const content = tools.length ? (
+    return tools.length ? (
       <>
         <PageHeader
           title="MCP servers"
@@ -45,7 +44,6 @@ async function MCPServersPage({
         linkText="Create MCP server"
       />
     );
-    return <BodyTemplate breadcrumbs={['MCP servers']}>{content}</BodyTemplate>;
   } catch (error) {
     return <FullPageError errorCode={getErrorCode(error)} context="MCP servers" />;
   }

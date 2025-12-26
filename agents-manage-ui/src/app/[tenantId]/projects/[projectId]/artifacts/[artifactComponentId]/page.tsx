@@ -2,7 +2,6 @@ import { ArtifactComponentForm } from '@/components/artifact-components/form/art
 import FullPageError from '@/components/errors/full-page-error';
 import { fetchArtifactComponent } from '@/lib/api/artifact-components';
 import { getErrorCode } from '@/lib/utils/error-serialization';
-import { Breadcrumb } from '@/components/layout/breadcrumb';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,22 +16,17 @@ export default async function ArtifactComponentPage({
       artifactComponentId
     );
     return (
-      <Breadcrumb
-        label={name}
-        href={`/${tenantId}/projects/${projectId}/artifacts/${artifactComponentId}`}
-      >
-        <ArtifactComponentForm
-          tenantId={tenantId}
-          projectId={projectId}
-          id={artifactComponentId}
-          initialData={{
-            id: artifactComponentId,
-            name,
-            description: description ?? '',
-            props,
-          }}
-        />
-      </Breadcrumb>
+      <ArtifactComponentForm
+        tenantId={tenantId}
+        projectId={projectId}
+        id={artifactComponentId}
+        initialData={{
+          id: artifactComponentId,
+          name,
+          description: description ?? '',
+          props,
+        }}
+      />
     );
   } catch (error) {
     return (

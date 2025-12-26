@@ -1,9 +1,9 @@
 import type { FC } from 'react';
+import { HeaderMenus } from '@/components/layout/header-menus';
 import { AppSidebarProvider } from '@/components/sidebar-nav/app-sidebar-provider';
+import { Separator } from '@/components/ui/separator';
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
-import { Separator } from '@/components/ui/separator';
-import { HeaderMenus } from '@/components/layout/header-menus';
 
 const Layout: FC<LayoutProps<'/[tenantId]'>> = ({ children, breadcrumbs }) => {
   return (

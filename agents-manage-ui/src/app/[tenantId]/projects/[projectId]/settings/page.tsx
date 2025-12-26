@@ -1,5 +1,4 @@
 import FullPageError from '@/components/errors/full-page-error';
-import { BodyTemplate } from '@/components/layout/body-template';
 import { ProjectForm } from '@/components/projects/form/project-form';
 import type { ProjectFormData } from '@/components/projects/form/validation';
 import { fetchProject } from '@/lib/api/projects';
@@ -15,7 +14,7 @@ export default async function SettingsPage({
   try {
     const projectData = await fetchProject(tenantId, projectId);
     return (
-      <BodyTemplate breadcrumbs={['Settings']} className="max-w-2xl mx-auto">
+      <div className="max-w-2xl mx-auto">
         <ProjectForm
           projectId={projectData.data.id}
           initialData={
@@ -26,7 +25,7 @@ export default async function SettingsPage({
           }
           tenantId={tenantId}
         />
-      </BodyTemplate>
+      </div>
     );
   } catch (error) {
     return (

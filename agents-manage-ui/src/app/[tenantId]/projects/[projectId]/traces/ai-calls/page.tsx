@@ -1,7 +1,6 @@
 'use client';
 
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import { BodyTemplate } from '@/components/layout/body-template';
 import { AICallsBreakdown } from '@/components/traces/ai-calls-breakdown';
 
 export default function AICallsPage() {
@@ -21,14 +20,5 @@ export default function AICallsPage() {
     router.push(tracesUrl);
   };
 
-  return (
-    <BodyTemplate
-      breadcrumbs={[
-        { label: 'Traces', href: `/${tenantId}/projects/${projectId}/traces` },
-        'AI Calls Breakdown',
-      ]}
-    >
-      <AICallsBreakdown onBack={handleBackToTraces} />
-    </BodyTemplate>
-  );
+  return <AICallsBreakdown onBack={handleBackToTraces} />;
 }

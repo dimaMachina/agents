@@ -1,5 +1,4 @@
 import { ExternalAgentForm } from '@/components/external-agents/form/external-agent-form';
-import { BodyTemplate } from '@/components/layout/body-template';
 import { type Credential, fetchCredentials } from '@/lib/api/credentials';
 
 async function NewExternalAgentPage({
@@ -14,23 +13,14 @@ async function NewExternalAgentPage({
   }
 
   return (
-    <BodyTemplate
-      breadcrumbs={[
-        {
-          label: 'External agents',
-          href: `/${tenantId}/projects/${projectId}/external-agents`,
-        },
-        'New',
-      ]}
-      className="max-w-2xl mx-auto"
-    >
+    <div className="max-w-2xl mx-auto">
       <ExternalAgentForm
         mode="create"
         credentials={credentials}
         tenantId={tenantId}
         projectId={projectId}
       />
-    </BodyTemplate>
+    </div>
   );
 }
 

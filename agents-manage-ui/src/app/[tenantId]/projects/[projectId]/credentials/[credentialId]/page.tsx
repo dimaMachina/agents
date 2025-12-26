@@ -6,7 +6,6 @@ import FullPageError from '@/components/errors/full-page-error';
 import { type Credential, fetchCredential } from '@/lib/api/credentials';
 import { getNangoConnectionMetadata } from '@/lib/mcp-tools/nango';
 import { getErrorCode } from '@/lib/utils/error-serialization';
-import { Breadcrumb } from '@/components/layout/breadcrumb';
 
 async function credentialToFormData(credential: Credential): Promise<EditCredentialFormData> {
   let connectionMetadata: Record<string, string> = {};
@@ -33,19 +32,14 @@ async function EditCredentialsPage({
     const credential = await fetchCredential(tenantId, projectId, credentialId);
     const initialFormData = await credentialToFormData(credential);
     return (
-      <Breadcrumb
-        label="Edit"
-        href={`/${tenantId}/projects/${projectId}/credentials/${credentialId}`}
-      >
-        <div className="max-w-2xl mx-auto">
-          <EditCredentialForm
-            tenantId={tenantId}
-            projectId={projectId}
-            credential={credential}
-            initialFormData={initialFormData}
-          />
-        </div>
-      </Breadcrumb>
+      <div className="max-w-2xl mx-auto">
+        <EditCredentialForm
+          tenantId={tenantId}
+          projectId={projectId}
+          credential={credential}
+          initialFormData={initialFormData}
+        />
+      </div>
     );
   } catch (error) {
     return (
