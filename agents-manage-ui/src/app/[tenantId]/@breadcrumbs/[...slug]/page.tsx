@@ -1,6 +1,7 @@
 import type { FC } from 'react';
-import { Breadcrumbs } from '@/components/ui/breadcrumbs';
 import { fetchProject } from '@/lib/api/projects';
+import { cn } from '@/lib/utils';
+import Link from 'next/link';
 
 const LABELS: Record<string, string> = {
   projects: 'Projects',
@@ -12,26 +13,13 @@ const LABELS: Record<string, string> = {
   artifacts: 'Artifacts',
   traces: 'Traces',
   conversations: 'Conversations',
-  'ai-calls': 'AI calls',
-  'tool-calls': 'Tool calls',
-  'external-agents': 'External agents',
+  'ai-calls': 'AI Calls',
+  'tool-calls': 'Tool Calls',
+  'external-agents': 'External Agents',
   'mcp-servers': 'MCP servers',
   new: 'New',
   providers: 'Providers',
   bearer: 'Bearer',
-};
-
-const formatLabel = (segment: string) => {
-  const mapped = LABELS[segment];
-  if (mapped) {
-    return mapped;
-  }
-
-  return segment
-    .replace(/[-_]/g, ' ')
-    .split(' ')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
 };
 
 const BreadcrumbSlot: FC<PageProps<'/[tenantId]/[...slug]'>> = async ({ params }) => {
@@ -50,10 +38,10 @@ const BreadcrumbSlot: FC<PageProps<'/[tenantId]/[...slug]'>> = async ({ params }
     }
   }
 
-  const crumbs = slug.map((segment, index) => {
+  const items = slug.map((segment, index) => {
     path = `${path}/${segment}`;
 
-    let label = formatLabel(segment);
+    let label = LABELS[segment];
     if (index === 1 && slug[0] === 'projects' && projectName) {
       label = projectName;
     }
@@ -61,7 +49,33 @@ const BreadcrumbSlot: FC<PageProps<'/[tenantId]/[...slug]'>> = async ({ params }
     return { label, href: path };
   });
 
-  return <Breadcrumbs items={crumbs} />;
+  return (
+    <nav className="text-sm text-muted-foreground" aria-label="Breadcrumb">
+      <ol className="flex items-center gap-2">
+        {items.map((item, idx, arr) => {
+          const isLast = idx === arr.length - 1;
+
+          return (
+            <li
+              key={`${item.label}-${idx}`}
+              className={cn(
+                'flex items-center gap-2',
+                !isLast && 'after:content-["›"] after:text-muted-foreground/60'
+              )}
+            >
+              {isLast ? (
+                <span className="font-medium text-foreground">{item.label}</span>
+              ) : (
+                <Link href={item.href} className="hover:text-foreground">
+                  {item.label}
+                </Link>
+              )}
+            </li>
+          );
+        })}
+      </ol>
+    </nav>
+  );
 };
 
 export default BreadcrumbSlot;
