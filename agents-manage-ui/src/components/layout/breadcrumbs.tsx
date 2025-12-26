@@ -1,12 +1,16 @@
 'use client';
 
-import { use } from 'react';
+import { type FC, use, useEffect } from 'react';
 import { BreadcrumbsContext } from './breadcrumbs-context';
 import Link from 'next/link';
 
-export function Breadcrumbs() {
+export const Breadcrumbs: FC = () => {
   const crumbs = use(BreadcrumbsContext);
+  useEffect(() => {
+    console.log('useEffect', crumbs);
+  }, []);
 
+  console.log('comp', { crumbs });
   return (
     <nav aria-label="Breadcrumbs">
       {crumbs.map((c, i) => (
@@ -17,4 +21,4 @@ export function Breadcrumbs() {
       ))}
     </nav>
   );
-}
+};

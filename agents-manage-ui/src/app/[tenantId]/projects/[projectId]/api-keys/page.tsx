@@ -2,7 +2,6 @@ import { ApiKeysTable } from '@/components/api-keys/api-keys-table';
 import { NewApiKeyDialog } from '@/components/api-keys/new-api-key-dialog';
 import FullPageError from '@/components/errors/full-page-error';
 import type { SelectOption } from '@/components/form/generic-select';
-import { BodyTemplate } from '@/components/layout/body-template';
 import { PageHeader } from '@/components/layout/page-header';
 import { apiKeyDescription } from '@/constants/page-descriptions';
 import { fetchAgents } from '@/lib/api/agent-full-client';
@@ -10,6 +9,7 @@ import { fetchApiKeys } from '@/lib/api/api-keys';
 import type { Agent } from '@/lib/types/agent-full';
 import { createLookup } from '@/lib/utils';
 import { getErrorCode } from '@/lib/utils/error-serialization';
+import { Breadcrumb } from '@/components/layout/breadcrumb';
 
 export const dynamic = 'force-dynamic';
 
@@ -31,14 +31,7 @@ async function ApiKeysPage({ params }: PageProps<'/[tenantId]/projects/[projectI
     const agentLookup = createLookup(agent.data);
     const agentOptions = createAgentOptions(agent.data);
     return (
-      <BodyTemplate
-        breadcrumbs={[
-          {
-            label: 'API keys',
-            href: `/${tenantId}/projects/${projectId}/api-keys`,
-          },
-        ]}
-      >
+      <Breadcrumb label="API keys" href={`/${tenantId}/projects/${projectId}/api-keys`}>
         <PageHeader
           title="API keys"
           description={apiKeyDescription}
@@ -51,7 +44,7 @@ async function ApiKeysPage({ params }: PageProps<'/[tenantId]/projects/[projectI
           }
         />
         <ApiKeysTable apiKeys={apiKeys.data} agentLookup={agentLookup} />
-      </BodyTemplate>
+      </Breadcrumb>
     );
   } catch (error) {
     return <FullPageError errorCode={getErrorCode(error)} context="API keys" />;
