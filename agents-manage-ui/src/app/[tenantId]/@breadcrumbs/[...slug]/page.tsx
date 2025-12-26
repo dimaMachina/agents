@@ -29,32 +29,15 @@ const STATIC_LABELS: Record<string, string> = {
   bearer: 'Bearer',
 };
 
-type BreadcrumbParams = {
-  tenantId: string;
-  slug?: string[] | string;
-};
-
-const formatLabel = (segment: string) => {
-  const mapped = STATIC_LABELS[segment];
-  if (mapped) return mapped;
-
-  return segment
-    .replace(/[-_]/g, ' ')
-    .split(' ')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
-};
-
 interface BreadcrumbItem {
   href: string;
   label: string;
 }
 
-async function buildCrumbs(params: BreadcrumbParams): Promise<BreadcrumbItem[]> {
-  const slugArray = Array.isArray(params.slug) ? params.slug : params.slug ? [params.slug] : [];
-  if (!slugArray.length) return [];
+const BreadcrumbSlot: FC<PageProps<'/[tenantId]/[...slug]'>> = async ({ params }) => {
+  const { tenantId, slug } = await params;
 
-  let path = `/${params.tenantId}`;
+  let path = `/${tenantId}`;
   let projectId: string | undefined;
   const nameCache = new Map<string, string>();
 
@@ -123,9 +106,9 @@ async function buildCrumbs(params: BreadcrumbParams): Promise<BreadcrumbItem[]> 
     }
   };
 
-  for (let index = 0; index < slugArray.length; index += 1) {
-    const segment = slugArray[index];
-    const prev = slugArray[index - 1];
+  for (let index = 0; index < slug.length; index += 1) {
+    const segment = slug[index];
+    const prev = slug[index - 1];
     path = `${path}/${segment}`;
 
     let label: string | undefined;
@@ -152,22 +135,16 @@ async function buildCrumbs(params: BreadcrumbParams): Promise<BreadcrumbItem[]> 
     }
 
     if (!label) {
-      label = formatLabel(segment);
+      label = STATIC_LABELS[segment];
     }
 
     crumbs.push({ label, href: path });
   }
 
-  return crumbs;
-}
-
-const BreadcrumbSlot: FC<PageProps<'/[tenantId]/[...slug]'>> = async ({ params }) => {
-  const { tenantId, slug } = await params;
-  const items = await buildCrumbs({ tenantId, slug });
   return (
     <nav className="text-sm text-muted-foreground" aria-label="Breadcrumb">
       <ol className="flex items-center gap-2">
-        {items.map((item, idx, arr) => {
+        {crumbs.map((item, idx, arr) => {
           const isLast = idx === arr.length - 1;
 
           return (
