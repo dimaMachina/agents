@@ -2,7 +2,6 @@ import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import { DataComponentsList } from '@/components/data-components/data-components-list';
 import FullPageError from '@/components/errors/full-page-error';
-import { BodyTemplate } from '@/components/layout/body-template';
 import EmptyState from '@/components/layout/empty-state';
 import { PageHeader } from '@/components/layout/page-header';
 import { Button } from '@/components/ui/button';
@@ -50,7 +49,7 @@ async function DataComponentsPage({
         linkText="Create component"
       />
     );
-    return <BodyTemplate breadcrumbs={['Components']}>{content}</BodyTemplate>;
+    return content;
   } catch (error) {
     return <FullPageError errorCode={getErrorCode(error)} context="components" />;
   }
