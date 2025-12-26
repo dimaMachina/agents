@@ -59,41 +59,41 @@ async function buildCrumbs(params: BreadcrumbParams): Promise<BreadcrumbItem[]> 
   const nameCache = new Map<string, string>();
 
   const fetchers: Record<string, (id: string) => Promise<string | undefined>> = {
-    project: async (id) => {
-      const project = await fetchProject(params.tenantId, id);
+    async project(id) {
+      const project = await fetchProject(tenantId, id);
       return project.data?.name;
     },
-    agent: async (id) => {
+    async agent(id) {
       if (!projectId) return undefined;
-      const result = await getFullAgentAction(params.tenantId, projectId, id);
+      const result = await getFullAgentAction(tenantId, projectId, id);
       return result.success ? result.data.name : undefined;
     },
-    artifact: async (id) => {
+    async artifact(id) {
       if (!projectId) return undefined;
-      const artifact = await fetchArtifactComponent(params.tenantId, projectId, id);
+      const artifact = await fetchArtifactComponent(tenantId, projectId, id);
       return artifact.name;
     },
-    dataComponent: async (id) => {
+    async dataComponent(id) {
       if (!projectId) return undefined;
-      const component = await fetchDataComponent(params.tenantId, projectId, id);
+      const component = await fetchDataComponent(tenantId, projectId, id);
       return component.name;
     },
-    credential: async (id) => {
+    async credential(id) {
       if (!projectId) return undefined;
-      const credential = await fetchCredential(params.tenantId, projectId, id);
+      const credential = await fetchCredential(tenantId, projectId, id);
       return credential.name;
     },
-    externalAgent: async (id) => {
+    async externalAgent(id) {
       if (!projectId) return undefined;
-      const externalAgent = await fetchExternalAgent(params.tenantId, projectId, id);
+      const externalAgent = await fetchExternalAgent(tenantId, projectId, id);
       return externalAgent.name;
     },
-    mcpServer: async (id) => {
+    async mcpServer(id) {
       if (!projectId) return undefined;
-      const tool = await fetchMCPTool(params.tenantId, projectId, id);
+      const tool = await fetchMCPTool(tenantId, projectId, id);
       return tool.name;
     },
-    provider: async (id) => {
+    async provider(id) {
       try {
         const providers = await fetchNangoProviders();
         const provider = providers?.find(
