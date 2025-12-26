@@ -77,19 +77,9 @@ const BreadcrumbSlot: FC<PageProps<'/[tenantId]/[...slug]'>> = async ({ params }
       return tool.name;
     },
     async provider(id) {
-      try {
-        const providers = await fetchNangoProviders();
-        const provider = providers?.find(
-          (item) =>
-            item.unique_key === id ||
-            item.name === id ||
-            (item as { slug?: string }).slug === id ||
-            item.display_name === id
-        );
-        return provider?.display_name || provider?.name || provider?.unique_key || provider?.slug;
-      } catch {
-        return undefined;
-      }
+      const providers = await fetchNangoProviders();
+      const provider = providers?.find((p) => encodeURIComponent(p.name) === id);
+      return provider?.display_name;
     },
   };
 

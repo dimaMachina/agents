@@ -7,7 +7,6 @@ import { use, useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { requiresCredentialForm } from '@/components/credentials/views/auth-form-config';
 import { GenericAuthForm } from '@/components/credentials/views/generic-auth-form';
-import { BodyTemplate } from '@/components/layout/body-template';
 import { Button } from '@/components/ui/button';
 import { useAuthSession } from '@/hooks/use-auth';
 import { useNangoConnect } from '@/hooks/use-nango-connect';
@@ -169,31 +168,14 @@ function ProviderSetupPage({
   }
 
   return (
-    <BodyTemplate
-      breadcrumbs={[
-        {
-          label: 'Credentials',
-          href: `/${tenantId}/projects/${projectId}/credentials`,
-        },
-        {
-          label: 'New credential',
-          href: `/${tenantId}/projects/${projectId}/credentials/new`,
-        },
-        {
-          label: 'Providers',
-          href: `/${tenantId}/projects/${projectId}/credentials/new/providers`,
-        },
-        provider.display_name,
-      ]}
-      className="max-w-2xl mx-auto"
-    >
+    <div className="max-w-2xl mx-auto">
       <GenericAuthForm
         provider={provider}
         onBack={handleBack}
         onSubmit={handleCreateCredential}
         loading={loading}
       />
-    </BodyTemplate>
+    </div>
   );
 }
 
