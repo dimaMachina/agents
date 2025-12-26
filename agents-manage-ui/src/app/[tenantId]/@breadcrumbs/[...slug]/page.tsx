@@ -1,13 +1,13 @@
-import type { FC } from 'react';
-import { fetchProject } from '@/lib/api/projects';
-import { fetchArtifactComponent } from '@/lib/api/artifact-components';
-import { fetchDataComponent } from '@/lib/api/data-components';
-import { fetchCredential } from '@/lib/api/credentials';
-import { fetchExternalAgent } from '@/lib/api/external-agents';
-import { fetchMCPTool } from '@/lib/api/tools';
-import { getFullAgentAction } from '@/lib/actions/agent-full';
-import { fetchNangoProviders } from '@/lib/mcp-tools/nango';
 import Link from 'next/link';
+import type { FC } from 'react';
+import { getFullAgentAction } from '@/lib/actions/agent-full';
+import { fetchArtifactComponent } from '@/lib/api/artifact-components';
+import { fetchCredential } from '@/lib/api/credentials';
+import { fetchDataComponent } from '@/lib/api/data-components';
+import { fetchExternalAgent } from '@/lib/api/external-agents';
+import { fetchProject } from '@/lib/api/projects';
+import { fetchMCPTool } from '@/lib/api/tools';
+import { fetchNangoProviders } from '@/lib/mcp-tools/nango';
 import { cn } from '@/lib/utils';
 
 const STATIC_LABELS: Record<string, string> = {

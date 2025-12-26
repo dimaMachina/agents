@@ -1,4 +1,4 @@
-import { type FC, Suspense } from 'react';
+import type { FC } from 'react';
 import FullPageError from '@/components/errors/full-page-error';
 import { getFullAgentAction } from '@/lib/actions/agent-full';
 import { fetchArtifactComponentsAction } from '@/lib/actions/artifact-components';
@@ -6,19 +6,28 @@ import { fetchCredentialsAction } from '@/lib/actions/credentials';
 import { fetchDataComponentsAction } from '@/lib/actions/data-components';
 import { fetchExternalAgentsAction } from '@/lib/actions/external-agents';
 import { fetchToolsAction } from '@/lib/actions/tools';
-import type { FullAgentDefinition } from '@/lib/types/agent-full';
 import { createLookup } from '@/lib/utils';
-import AgentSkeleton from './loading';
 import { Agent } from './page.client';
-import { Breadcrumb } from '@/components/layout/breadcrumb';
 
 export const dynamic = 'force-dynamic';
 
-const AgentData: FC<{
-  agent: FullAgentDefinition;
-  tenantId: string;
-  projectId: string;
-}> = async ({ agent, tenantId, projectId }) => {
+const AgentPage: FC<PageProps<'/[tenantId]/projects/[projectId]/agents/[agentId]'>> = async ({
+  params,
+}) => {
+  const { agentId, tenantId, projectId } = await params;
+  const agent = await getFullAgentAction(tenantId, projectId, agentId);
+
+  if (!agent.success) {
+    return (
+      <FullPageError
+        errorCode={agent.code}
+        context="agent"
+        link={`/${tenantId}/projects/${projectId}/agents`}
+        linkText="Back to agents"
+      />
+    );
+  }
+
   const [dataComponents, artifactComponents, credentials, tools, externalAgents] =
     await Promise.all([
       fetchDataComponentsAction(tenantId, projectId),
@@ -58,41 +67,12 @@ const AgentData: FC<{
 
   return (
     <Agent
-      agent={agent}
+      agent={agent.data}
       dataComponentLookup={dataComponentLookup}
       artifactComponentLookup={artifactComponentLookup}
       toolLookup={toolLookup}
       credentialLookup={credentialLookup}
     />
-  );
-};
-
-const AgentPage: FC<PageProps<'/[tenantId]/projects/[projectId]/agents/[agentId]'>> = async ({
-  params,
-}) => {
-  const { agentId, tenantId, projectId } = await params;
-  const agent = await getFullAgentAction(tenantId, projectId, agentId);
-
-  if (!agent.success) {
-    return (
-      <FullPageError
-        errorCode={agent.code}
-        context="agent"
-        link={`/${tenantId}/projects/${projectId}/agents`}
-        linkText="Back to agents"
-      />
-    );
-  }
-
-  return (
-    <Breadcrumb
-      label={agent.data.name}
-      href={`/${tenantId}/projects/${projectId}/agents/${agentId}`}
-    >
-      <Suspense fallback={<AgentSkeleton />}>
-        <AgentData agent={agent.data} tenantId={tenantId} projectId={projectId} />
-      </Suspense>
-    </Breadcrumb>
   );
 };
 
