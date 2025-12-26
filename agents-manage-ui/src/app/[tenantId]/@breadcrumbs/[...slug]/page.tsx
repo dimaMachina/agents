@@ -37,10 +37,6 @@ interface BreadcrumbItem {
 const BreadcrumbSlot: FC<PageProps<'/[tenantId]/[...slug]'>> = async ({ params }) => {
   const { tenantId, slug } = await params;
 
-  let path = `/${tenantId}`;
-  let projectId: string | undefined;
-  const nameCache = new Map<string, string>();
-
   const fetchers: Record<string, (id: string) => Promise<string | undefined>> = {
     async project(id) {
       const project = await fetchProject(tenantId, id);
@@ -84,42 +80,30 @@ const BreadcrumbSlot: FC<PageProps<'/[tenantId]/[...slug]'>> = async ({ params }
   };
 
   const crumbs: BreadcrumbItem[] = [];
+  let path = `/${tenantId}`;
+  let projectId: string | undefined;
 
-  const getCached = async (key: string, fetcher: () => Promise<string | undefined>) => {
-    if (nameCache.has(key)) return nameCache.get(key);
-    try {
-      const value = await fetcher();
-      if (value) nameCache.set(key, value);
-      return value;
-    } catch {
-      return undefined;
-    }
-  };
-
-  for (let index = 0; index < slug.length; index += 1) {
-    const segment = slug[index];
+  for (const [index, segment] of slug.entries()) {
     const prev = slug[index - 1];
-    path = `${path}/${segment}`;
-
     let label: string | undefined;
 
     if (prev === 'projects') {
       projectId = segment;
-      label = await getCached(`project:${segment}`, () => fetchers.project(segment));
+      label = await fetchers.project(segment);
     } else if (prev === 'agents') {
-      label = await getCached(`agent:${segment}`, () => fetchers.agent(segment));
+      label = await fetchers.agent(segment);
     } else if (prev === 'artifacts') {
-      label = await getCached(`artifact:${segment}`, () => fetchers.artifact(segment));
+      label = await fetchers.artifact(segment);
     } else if (prev === 'components') {
-      label = await getCached(`data:${segment}`, () => fetchers.dataComponent(segment));
+      label = await fetchers.dataComponent(segment);
     } else if (prev === 'credentials') {
-      label = await getCached(`credential:${segment}`, () => fetchers.credential(segment));
+      label = await fetchers.credential(segment);
     } else if (prev === 'external-agents') {
-      label = await getCached(`external:${segment}`, () => fetchers.externalAgent(segment));
+      label = await fetchers.externalAgent(segment);
     } else if (prev === 'mcp-servers') {
-      label = await getCached(`mcp:${segment}`, () => fetchers.mcpServer(segment));
+      label = await fetchers.mcpServer(segment);
     } else if (prev === 'providers') {
-      label = await getCached(`provider:${segment}`, () => fetchers.provider(segment));
+      label = await fetchers.provider(segment);
     } else if (prev === 'conversations') {
       label = `Conversation ${segment.slice(0, 8)}`;
     }
@@ -128,12 +112,13 @@ const BreadcrumbSlot: FC<PageProps<'/[tenantId]/[...slug]'>> = async ({ params }
       label = STATIC_LABELS[segment];
     }
 
+    path = `${path}/${segment}`;
     crumbs.push({ label, href: path });
   }
 
   return (
-    <nav className="text-sm text-muted-foreground" aria-label="Breadcrumb">
-      <ol className="flex items-center gap-2">
+    <nav aria-label="Breadcrumb">
+      <ol className="text-sm text-muted-foreground flex items-center gap-2">
         {crumbs.map((item, idx, arr) => {
           const isLast = idx === arr.length - 1;
 
