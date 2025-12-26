@@ -152,11 +152,14 @@ const BreadcrumbSlot: FC<PageProps<'/[tenantId]/[...slug]'>> = async ({ params }
               key={`${item.label}-${idx}`}
               className={cn(
                 'flex items-center gap-2',
-                !isLast && 'after:content-["›"] after:text-muted-foreground/60'
+                isLast
+                  ? 'font-medium text-foreground'
+                  : 'after:content-["/"] after:text-muted-foreground/60'
               )}
+              aria-current={isLast ? 'page' : undefined}
             >
               {isLast ? (
-                <span className="font-medium text-foreground">{item.label}</span>
+                item.label
               ) : (
                 <Link href={item.href} className="hover:text-foreground">
                   {item.label}
