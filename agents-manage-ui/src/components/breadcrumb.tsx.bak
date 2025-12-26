@@ -1,0 +1,19 @@
+'use client';
+
+import type { FC, ReactNode } from 'react';
+import Link from 'next/link';
+
+export interface BreadcrumbProps {
+  label: string;
+  href: string;
+  children: ReactNode;
+}
+
+export const Breadcrumb: FC<BreadcrumbProps> = ({ href, label, children }) => {
+  return (
+    <>
+      <Link href={href}>{label}</Link>
+      {children}
+    </>
+  );
+};

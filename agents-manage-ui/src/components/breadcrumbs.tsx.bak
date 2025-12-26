@@ -1,0 +1,19 @@
+'use client';
+
+import Link from 'next/link';
+import type { FC } from 'react';
+import type { BreadcrumbProps } from './breadcrumb';
+
+export const Breadcrumbs: FC<{ items: BreadcrumbProps[] }> = ({ items }) => {
+  return (
+    <nav aria-label="Breadcrumb">
+      <ol>
+        {items.map((item, i) => (
+          <li key={i}>
+            {item.href ? <Link href={item.href}>{item.label}</Link> : item.label}
+          </li>
+        ))}
+      </ol>
+    </nav>
+  );
+};
