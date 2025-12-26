@@ -2,7 +2,6 @@ import { AgentList } from '@/components/agents/agents-list';
 import { NewAgentDialog } from '@/components/agents/new-agent-item';
 import FullPageError from '@/components/errors/full-page-error';
 import { AgentsIcon } from '@/components/icons/empty-state/agents';
-import { BodyTemplate } from '@/components/layout/body-template';
 import EmptyState from '@/components/layout/empty-state';
 import { PageHeader } from '@/components/layout/page-header';
 import { agentDescription } from '@/constants/page-descriptions';
@@ -29,13 +28,7 @@ async function AgentsPage({ params }: PageProps<'/[tenantId]/projects/[projectId
         icon={<AgentsIcon />}
       />
     );
-    return (
-      <BodyTemplate
-        breadcrumbs={[{ label: 'Agents', href: `/${tenantId}/projects/${projectId}/agents` }]}
-      >
-        {content}
-      </BodyTemplate>
-    );
+    return content;
   } catch (error) {
     return <FullPageError errorCode={getErrorCode(error)} context="agents" />;
   }
