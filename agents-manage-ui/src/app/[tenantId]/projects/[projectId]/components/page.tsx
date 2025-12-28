@@ -17,8 +17,8 @@ async function DataComponentsPage({
   const { tenantId, projectId } = await params;
 
   try {
-    const dataComponents = await fetchDataComponents(tenantId, projectId);
-    const content = dataComponents.data.length ? (
+    const { data } = await fetchDataComponents(tenantId, projectId);
+    return data.length ? (
       <>
         <PageHeader
           title="Components"
@@ -35,11 +35,7 @@ async function DataComponentsPage({
             </Button>
           }
         />
-        <DataComponentsList
-          tenantId={tenantId}
-          projectId={projectId}
-          dataComponents={dataComponents.data}
-        />
+        <DataComponentsList tenantId={tenantId} projectId={projectId} dataComponents={data} />
       </>
     ) : (
       <EmptyState
@@ -49,7 +45,6 @@ async function DataComponentsPage({
         linkText="Create component"
       />
     );
-    return content;
   } catch (error) {
     return <FullPageError errorCode={getErrorCode(error)} context="components" />;
   }

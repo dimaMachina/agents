@@ -16,7 +16,7 @@ const STATIC_LABELS: Record<string, string> = {
   'api-keys': 'API keys',
   artifacts: 'Artifacts',
   new: 'New',
-  // settings: 'Settings',
+  settings: 'Settings',
   // credentials: 'Credentials',
   // components: 'Components',
   // traces: 'Traces',
@@ -45,7 +45,7 @@ const BreadcrumbSlot: FC<PageProps<'/[tenantId]/[...slug]'>> = async ({ params }
 
     try {
       const prev = slug[index - 1];
-      // this is needed until we remove all `new` routes
+      // this check is needed until we remove all `new` routes
       if (id !== 'new') {
         switch (prev) {
           case 'projects': {
