@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { FC } from 'react';
+import { getStatusCodeFromErrorCode } from '@/components/errors/full-page-error';
 import { getFullAgentAction } from '@/lib/actions/agent-full';
 import { fetchArtifactComponent } from '@/lib/api/artifact-components';
 import { fetchCredential } from '@/lib/api/credentials';
@@ -9,6 +10,7 @@ import { fetchProject } from '@/lib/api/projects';
 import { fetchMCPTool } from '@/lib/api/tools';
 import { fetchNangoProviders } from '@/lib/mcp-tools/nango';
 import { cn } from '@/lib/utils';
+import { getErrorCode } from '@/lib/utils/error-serialization';
 
 const STATIC_LABELS: Record<string, string> = {
   projects: 'Projects',
@@ -105,8 +107,10 @@ const BreadcrumbSlot: FC<PageProps<'/[tenantId]/[...slug]'>> = async ({ params }
       if (!label) {
         throw new Error(`Unknown breadcrumb segment "${id}"`);
       }
-    } catch {
-      label = 'Error';
+    } catch (error) {
+      const errorCode = getErrorCode(error);
+      const resolvedStatusCode = getStatusCodeFromErrorCode(errorCode);
+      label = resolvedStatusCode ? `${resolvedStatusCode} Error` : 'Error';
     }
 
     href += `/${id}`;
