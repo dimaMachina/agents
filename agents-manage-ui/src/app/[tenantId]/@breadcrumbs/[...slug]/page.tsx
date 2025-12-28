@@ -12,21 +12,21 @@ import { cn } from '@/lib/utils';
 
 const STATIC_LABELS: Record<string, string> = {
   projects: 'Projects',
-  settings: 'Settings',
   agents: 'Agents',
-  'api-keys': 'API keys',
-  credentials: 'Credentials',
-  components: 'Components',
-  artifacts: 'Artifacts',
-  traces: 'Traces',
-  conversations: 'Conversations',
-  'ai-calls': 'AI Calls',
-  'tool-calls': 'Tool Calls',
-  'external-agents': 'External Agents',
-  'mcp-servers': 'MCP servers',
-  new: 'New',
-  providers: 'Providers',
-  bearer: 'Bearer',
+  // settings: 'Settings',
+  // 'api-keys': 'API keys',
+  // credentials: 'Credentials',
+  // components: 'Components',
+  // artifacts: 'Artifacts',
+  // traces: 'Traces',
+  // conversations: 'Conversations',
+  // 'ai-calls': 'AI Calls',
+  // 'tool-calls': 'Tool Calls',
+  // 'external-agents': 'External Agents',
+  // 'mcp-servers': 'MCP servers',
+  // new: 'New',
+  // providers: 'Providers',
+  // bearer: 'Bearer',
 };
 
 interface BreadcrumbItem {
@@ -41,59 +41,71 @@ const BreadcrumbSlot: FC<PageProps<'/[tenantId]/[...slug]'>> = async ({ params }
   let projectId = '';
 
   for (const [index, id] of slug.entries()) {
-    const prev = slug[index - 1];
     let label: string | undefined;
 
-    switch (prev) {
-      case 'projects': {
-        projectId = id;
-        const project = await fetchProject(tenantId, id);
-        label = project.data?.name;
-        break;
+    try {
+      const prev = slug[index - 1];
+      switch (prev) {
+        case 'projects': {
+          projectId = id;
+          const project = await fetchProject(tenantId, id);
+          label = project.data.name;
+          break;
+        }
+        case 'agents': {
+          const result = await getFullAgentAction(tenantId, projectId, id);
+          if (result.success) {
+            label = result.data.name;
+          }
+          break;
+        }
+        case 'artifacts': {
+          const artifact = await fetchArtifactComponent(tenantId, projectId, id);
+          label = artifact.name;
+          break;
+        }
+        case 'components': {
+          const component = await fetchDataComponent(tenantId, projectId, id);
+          label = component.name;
+          break;
+        }
+        case 'credentials': {
+          const credential = await fetchCredential(tenantId, projectId, id);
+          label = credential.name;
+          break;
+        }
+        case 'external-agents': {
+          const externalAgent = await fetchExternalAgent(tenantId, projectId, id);
+          label = externalAgent.name;
+          break;
+        }
+        case 'mcp-servers': {
+          const tool = await fetchMCPTool(tenantId, projectId, id);
+          label = tool.name;
+          break;
+        }
+        case 'providers': {
+          const providers = await fetchNangoProviders();
+          const provider = providers.find((p) => encodeURIComponent(p.name) === id);
+          if (provider) {
+            label = provider.display_name;
+          }
+          break;
+        }
+        case 'conversations': {
+          label = `Conversation ${id.slice(0, 8)}`;
+          break;
+        }
       }
-      case 'agents': {
-        const result = await getFullAgentAction(tenantId, projectId, id);
-        label = result.success ? result.data.name : undefined;
-        break;
+
+      label ??= STATIC_LABELS[id];
+      if (!label) {
+        throw new Error(`Unknown breadcrumb segment "${id}"`);
       }
-      case 'artifacts': {
-        const artifact = await fetchArtifactComponent(tenantId, projectId, id);
-        label = artifact.name;
-        break;
-      }
-      case 'components': {
-        const component = await fetchDataComponent(tenantId, projectId, id);
-        label = component.name;
-        break;
-      }
-      case 'credentials': {
-        const credential = await fetchCredential(tenantId, projectId, id);
-        label = credential.name;
-        break;
-      }
-      case 'external-agents': {
-        const externalAgent = await fetchExternalAgent(tenantId, projectId, id);
-        label = externalAgent.name;
-        break;
-      }
-      case 'mcp-servers': {
-        const tool = await fetchMCPTool(tenantId, projectId, id);
-        label = tool.name;
-        break;
-      }
-      case 'providers': {
-        const providers = await fetchNangoProviders();
-        const provider = providers?.find((p) => encodeURIComponent(p.name) === id);
-        label = provider?.display_name;
-        break;
-      }
-      case 'conversations': {
-        label = `Conversation ${id.slice(0, 8)}`;
-        break;
-      }
+    } catch {
+      label = 'Error';
     }
 
-    label ??= STATIC_LABELS[id];
     href = `${href}/${id}`;
     crumbs.push({ label, href });
   }
