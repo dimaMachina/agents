@@ -1,30 +1,18 @@
 'use client';
 
-import { useParams, useRouter } from 'next/navigation';
-import { BodyTemplate } from '@/components/layout/body-template';
+import { useRouter } from 'next/navigation';
+import { use } from 'react';
 import { ConversationDetail } from '@/components/traces/conversation-detail';
 
-export default function ConversationPage() {
+export default function ConversationPage({
+  params,
+}: PageProps<'/[tenantId]/projects/[projectId]/traces/conversations/[conversationId]'>) {
   const router = useRouter();
-  const { conversationId, tenantId, projectId } = useParams<{
-    conversationId: string;
-    tenantId: string;
-    projectId: string;
-  }>();
+  const { conversationId, tenantId, projectId } = use(params);
 
   const handleBackToTraces = () => {
     router.push(`/${tenantId}/projects/${projectId}/traces`);
   };
 
-  return (
-    <BodyTemplate
-      disableScroll
-      breadcrumbs={[
-        { label: 'Traces', href: `/${tenantId}/projects/${projectId}/traces` },
-        'Conversation',
-      ]}
-    >
-      <ConversationDetail conversationId={conversationId} onBack={handleBackToTraces} />
-    </BodyTemplate>
-  );
+  return <ConversationDetail conversationId={conversationId} onBack={handleBackToTraces} />;
 }
