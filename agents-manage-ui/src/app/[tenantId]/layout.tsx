@@ -34,7 +34,7 @@ const Layout: FC<LayoutProps<'/[tenantId]'>> = ({ children, breadcrumbs }) => {
               id="main-content"
               className={cn(
                 '@container', // do not overflow the container
-                'w-full p-6 grow'
+                'w-full p-6 grow [&:has(>.no-container-padding)]:contents'
                 // className
               )}
             >
