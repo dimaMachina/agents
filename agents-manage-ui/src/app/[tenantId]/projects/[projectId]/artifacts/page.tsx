@@ -17,7 +17,7 @@ async function ArtifactComponentsPage({
   const { tenantId, projectId } = await params;
   try {
     const { data } = await fetchArtifactComponents(tenantId, projectId);
-    const content = data.length ? (
+    return data.length ? (
       <>
         <PageHeader
           title="Artifacts"
@@ -40,7 +40,6 @@ async function ArtifactComponentsPage({
         linkText="Create artifact"
       />
     );
-    return content;
   } catch (error) {
     return <FullPageError errorCode={getErrorCode(error)} context="artifacts" />;
   }
