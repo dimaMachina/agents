@@ -14,7 +14,7 @@ async function AgentsPage({ params }: PageProps<'/[tenantId]/projects/[projectId
   const { tenantId, projectId } = await params;
   try {
     const agents = await fetchAgents(tenantId, projectId);
-    const content = agents.data.length ? (
+    return agents.data.length ? (
       <>
         <PageHeader title="Agents" description={agentDescription} />
         <AgentList tenantId={tenantId} projectId={projectId} agent={agents.data} />
@@ -28,7 +28,6 @@ async function AgentsPage({ params }: PageProps<'/[tenantId]/projects/[projectId
         icon={<AgentsIcon />}
       />
     );
-    return content;
   } catch (error) {
     return <FullPageError errorCode={getErrorCode(error)} context="agents" />;
   }
