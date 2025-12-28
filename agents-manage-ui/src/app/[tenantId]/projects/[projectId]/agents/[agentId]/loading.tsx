@@ -1,7 +1,6 @@
 import type { FC } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 
-// To avoid have flash of skeleton from `[projectId]/loading.tsx` until `agent` is fetched from `getFullAgentAction` in `page.tsx` file
 const AgentLoading: FC = () => {
   return (
     <div className="flex p-4 no-container-padding">
