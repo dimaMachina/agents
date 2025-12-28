@@ -43,32 +43,26 @@ const BreadcrumbSlot: FC<PageProps<'/[tenantId]/[...slug]'>> = async ({ params }
       return project.data?.name;
     },
     async agent(id) {
-      if (!projectId) return undefined;
       const result = await getFullAgentAction(tenantId, projectId, id);
       return result.success ? result.data.name : undefined;
     },
     async artifact(id) {
-      if (!projectId) return undefined;
       const artifact = await fetchArtifactComponent(tenantId, projectId, id);
       return artifact.name;
     },
     async dataComponent(id) {
-      if (!projectId) return undefined;
       const component = await fetchDataComponent(tenantId, projectId, id);
       return component.name;
     },
     async credential(id) {
-      if (!projectId) return undefined;
       const credential = await fetchCredential(tenantId, projectId, id);
       return credential.name;
     },
     async externalAgent(id) {
-      if (!projectId) return undefined;
       const externalAgent = await fetchExternalAgent(tenantId, projectId, id);
       return externalAgent.name;
     },
     async mcpServer(id) {
-      if (!projectId) return undefined;
       const tool = await fetchMCPTool(tenantId, projectId, id);
       return tool.name;
     },
@@ -80,72 +74,73 @@ const BreadcrumbSlot: FC<PageProps<'/[tenantId]/[...slug]'>> = async ({ params }
   };
 
   const crumbs: BreadcrumbItem[] = [];
-  let path = `/${tenantId}`;
-  let projectId: string | undefined;
+  let href = `/${tenantId}`;
+  let projectId = '';
 
   for (const [index, segment] of slug.entries()) {
     const prev = slug[index - 1];
     let label: string | undefined;
 
-    if (prev === 'projects') {
-      projectId = segment;
-      label = await fetchers.project(segment);
-    } else if (prev === 'agents') {
-      label = await fetchers.agent(segment);
-    } else if (prev === 'artifacts') {
-      label = await fetchers.artifact(segment);
-    } else if (prev === 'components') {
-      label = await fetchers.dataComponent(segment);
-    } else if (prev === 'credentials') {
-      label = await fetchers.credential(segment);
-    } else if (prev === 'external-agents') {
-      label = await fetchers.externalAgent(segment);
-    } else if (prev === 'mcp-servers') {
-      label = await fetchers.mcpServer(segment);
-    } else if (prev === 'providers') {
-      label = await fetchers.provider(segment);
-    } else if (prev === 'conversations') {
-      label = `Conversation ${segment.slice(0, 8)}`;
+    switch (prev) {
+      case 'projects':
+        projectId = segment;
+        label = await fetchers.project(segment);
+        break;
+      case 'agents':
+        label = await fetchers.agent(segment);
+        break;
+      case 'artifacts':
+        label = await fetchers.artifact(segment);
+        break;
+      case 'components':
+        label = await fetchers.dataComponent(segment);
+        break;
+      case 'credentials':
+        label = await fetchers.credential(segment);
+        break;
+      case 'external-agents':
+        label = await fetchers.externalAgent(segment);
+        break;
+      case 'mcp-servers':
+        label = await fetchers.mcpServer(segment);
+        break;
+      case 'providers':
+        label = await fetchers.provider(segment);
+        break;
+      case 'conversations':
+        label = `Conversation ${segment.slice(0, 8)}`;
+        break;
     }
 
-    if (!label) {
-      label = STATIC_LABELS[segment];
-    }
-
-    path = `${path}/${segment}`;
-    crumbs.push({ label, href: path });
+    label ??= STATIC_LABELS[segment];
+    href = `${href}/${segment}`;
+    crumbs.push({ label, href });
   }
 
-  return (
-    <nav aria-label="Breadcrumb">
-      <ol className="text-sm text-muted-foreground flex items-center gap-2">
-        {crumbs.map((item, idx, arr) => {
-          const isLast = idx === arr.length - 1;
+  return crumbs.map((item, idx, arr) => {
+    const isLast = idx === arr.length - 1;
 
-          return (
-            <li
-              key={`${item.label}-${idx}`}
-              className={cn(
-                'flex items-center gap-2',
-                isLast
-                  ? 'font-medium text-foreground'
-                  : 'after:content-["/"] after:text-muted-foreground/60'
-              )}
-              aria-current={isLast ? 'page' : undefined}
-            >
-              {isLast ? (
-                item.label
-              ) : (
-                <Link href={item.href} className="hover:text-foreground">
-                  {item.label}
-                </Link>
-              )}
-            </li>
-          );
-        })}
-      </ol>
-    </nav>
-  );
+    return (
+      <li
+        key={`${item.label}-${idx}`}
+        className={cn(
+          'flex items-center gap-2',
+          isLast
+            ? 'font-medium text-foreground'
+            : 'after:content-["/"] after:text-muted-foreground/60'
+        )}
+        aria-current={isLast ? 'page' : undefined}
+      >
+        {isLast ? (
+          item.label
+        ) : (
+          <Link href={item.href} className="hover:text-foreground">
+            {item.label}
+          </Link>
+        )}
+      </li>
+    );
+  });
 };
 
 export default BreadcrumbSlot;
