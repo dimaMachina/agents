@@ -36,84 +36,65 @@ interface BreadcrumbItem {
 
 const BreadcrumbSlot: FC<PageProps<'/[tenantId]/[...slug]'>> = async ({ params }) => {
   const { tenantId, slug } = await params;
-
-  const fetchers: Record<string, (id: string) => Promise<string | undefined>> = {
-    async project(id) {
-      const project = await fetchProject(tenantId, id);
-      return project.data?.name;
-    },
-    async agent(id) {
-      const result = await getFullAgentAction(tenantId, projectId, id);
-      return result.success ? result.data.name : undefined;
-    },
-    async artifact(id) {
-      const artifact = await fetchArtifactComponent(tenantId, projectId, id);
-      return artifact.name;
-    },
-    async dataComponent(id) {
-      const component = await fetchDataComponent(tenantId, projectId, id);
-      return component.name;
-    },
-    async credential(id) {
-      const credential = await fetchCredential(tenantId, projectId, id);
-      return credential.name;
-    },
-    async externalAgent(id) {
-      const externalAgent = await fetchExternalAgent(tenantId, projectId, id);
-      return externalAgent.name;
-    },
-    async mcpServer(id) {
-      const tool = await fetchMCPTool(tenantId, projectId, id);
-      return tool.name;
-    },
-    async provider(id) {
-      const providers = await fetchNangoProviders();
-      const provider = providers?.find((p) => encodeURIComponent(p.name) === id);
-      return provider?.display_name;
-    },
-  };
-
   const crumbs: BreadcrumbItem[] = [];
   let href = `/${tenantId}`;
   let projectId = '';
 
-  for (const [index, segment] of slug.entries()) {
+  for (const [index, id] of slug.entries()) {
     const prev = slug[index - 1];
     let label: string | undefined;
 
     switch (prev) {
-      case 'projects':
-        projectId = segment;
-        label = await fetchers.project(segment);
+      case 'projects': {
+        projectId = id;
+        const project = await fetchProject(tenantId, id);
+        label = project.data?.name;
         break;
-      case 'agents':
-        label = await fetchers.agent(segment);
+      }
+      case 'agents': {
+        const result = await getFullAgentAction(tenantId, projectId, id);
+        label = result.success ? result.data.name : undefined;
         break;
-      case 'artifacts':
-        label = await fetchers.artifact(segment);
+      }
+      case 'artifacts': {
+        const artifact = await fetchArtifactComponent(tenantId, projectId, id);
+        label = artifact.name;
         break;
-      case 'components':
-        label = await fetchers.dataComponent(segment);
+      }
+      case 'components': {
+        const component = await fetchDataComponent(tenantId, projectId, id);
+        label = component.name;
         break;
-      case 'credentials':
-        label = await fetchers.credential(segment);
+      }
+      case 'credentials': {
+        const credential = await fetchCredential(tenantId, projectId, id);
+        label = credential.name;
         break;
-      case 'external-agents':
-        label = await fetchers.externalAgent(segment);
+      }
+      case 'external-agents': {
+        const externalAgent = await fetchExternalAgent(tenantId, projectId, id);
+        label = externalAgent.name;
         break;
-      case 'mcp-servers':
-        label = await fetchers.mcpServer(segment);
+      }
+      case 'mcp-servers': {
+        const tool = await fetchMCPTool(tenantId, projectId, id);
+        label = tool.name;
         break;
-      case 'providers':
-        label = await fetchers.provider(segment);
+      }
+      case 'providers': {
+        const providers = await fetchNangoProviders();
+        const provider = providers?.find((p) => encodeURIComponent(p.name) === id);
+        label = provider?.display_name;
         break;
-      case 'conversations':
-        label = `Conversation ${segment.slice(0, 8)}`;
+      }
+      case 'conversations': {
+        label = `Conversation ${id.slice(0, 8)}`;
         break;
+      }
     }
 
-    label ??= STATIC_LABELS[segment];
-    href = `${href}/${segment}`;
+    label ??= STATIC_LABELS[id];
+    href = `${href}/${id}`;
     crumbs.push({ label, href });
   }
 
@@ -122,7 +103,7 @@ const BreadcrumbSlot: FC<PageProps<'/[tenantId]/[...slug]'>> = async ({ params }
 
     return (
       <li
-        key={`${item.label}-${idx}`}
+        key={item.href}
         className={cn(
           'flex items-center gap-2',
           isLast
