@@ -24,10 +24,10 @@ const STATIC_LABELS: Record<string, string> = {
   'mcp-servers': 'MCP Servers',
   bearer: 'Bearer',
   edit: 'Edit',
+  providers: 'Providers',
   // conversations: 'Conversations',
   // 'ai-calls': 'AI Calls',
   // 'tool-calls': 'Tool Calls',
-  // providers: 'Providers',
 };
 
 interface BreadcrumbItem {

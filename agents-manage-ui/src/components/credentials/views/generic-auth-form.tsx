@@ -9,6 +9,7 @@ import { GenericTextarea } from '@/components/form/generic-textarea';
 import { ProviderIcon } from '@/components/icons/provider-icon';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
+import { cn } from '@/lib/utils';
 import { type FieldConfig, type FormSection, getFormConfig } from './auth-form-config';
 
 interface GenericAuthFormProps {
@@ -16,6 +17,7 @@ interface GenericAuthFormProps {
   onBack: () => void;
   onSubmit: (credentials: Record<string, any>) => void;
   loading?: boolean;
+  className?: string;
 }
 
 /**
@@ -61,6 +63,7 @@ export function GenericAuthForm({
   onBack,
   onSubmit,
   loading = false,
+  className,
 }: GenericAuthFormProps) {
   const formConfig = getFormConfig(provider.auth_mode);
 
@@ -81,7 +84,7 @@ export function GenericAuthForm({
 
   if (!formConfig) {
     return (
-      <div className="space-y-6">
+      <div className={cn('space-y-6', className)}>
         <div className="flex items-center gap-4">
           <Button variant="outline" onClick={onBack}>
             ← Back
@@ -162,7 +165,7 @@ export function GenericAuthForm({
   );
 
   return (
-    <div className="space-y-6">
+    <div className={cn('space-y-6', className)}>
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-3">
           <ProviderIcon provider={provider.name} size={24} />

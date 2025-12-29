@@ -168,14 +168,13 @@ function ProviderSetupPage({
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <GenericAuthForm
-        provider={provider}
-        onBack={handleBack}
-        onSubmit={handleCreateCredential}
-        loading={loading}
-      />
-    </div>
+    <GenericAuthForm
+      className="max-w-2xl mx-auto"
+      provider={provider}
+      onBack={handleBack}
+      onSubmit={handleCreateCredential}
+      loading={loading}
+    />
   );
 }
 
