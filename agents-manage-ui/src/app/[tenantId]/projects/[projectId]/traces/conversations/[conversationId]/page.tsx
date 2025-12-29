@@ -7,10 +7,14 @@ import {
   MessageSquare,
   TriangleAlert,
 } from 'lucide-react';
-import { useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { use, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { formatDateTime, formatDuration } from '@/app/utils/format-date';
+import { MCPBreakdownCard } from '@/components/traces/mcp-breakdown-card';
+import { SignozLink } from '@/components/traces/signoz-link';
+import { InfoRow } from '@/components/traces/timeline/blocks';
+import { TimelineWrapper } from '@/components/traces/timeline/timeline-wrapper';
 import type {
   ActivityItem,
   ConversationDetail as ConversationDetailType,
@@ -23,29 +27,21 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useRuntimeConfig } from '@/contexts/runtime-config-context';
 import { getSignozTracesExplorerUrl } from '@/lib/utils/signoz-links';
 import { copyTraceToClipboard } from '@/lib/utils/trace-formatter';
-import { MCPBreakdownCard } from './mcp-breakdown-card';
-import { SignozLink } from './signoz-link';
-import { InfoRow } from './timeline/blocks';
-import { TimelineWrapper } from './timeline/timeline-wrapper';
 
-interface ConversationDetailProps {
-  conversationId: string;
-  onBack?: () => void;
-}
+export default function ConversationDetail({
+  params,
+}: PageProps<'/[tenantId]/projects/[projectId]/traces/conversations/[conversationId]'>) {
+  const router = useRouter();
+  const { conversationId, tenantId, projectId } = use(params);
 
-export function ConversationDetail({ conversationId, onBack }: ConversationDetailProps) {
-  // const router = useRouter();
-  // const { conversationId, tenantId, projectId } = use(params);
-  //
-  // const handleBackToTraces = () => {
-  //   router.push(`/${tenantId}/projects/${projectId}/traces`);
-  // };
+  const onBack = () => {
+    router.push(`/${tenantId}/projects/${projectId}/traces`);
+  };
 
   const [conversation, setConversation] = useState<ConversationDetailType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isCopying, setIsCopying] = useState(false);
-  const { tenantId, projectId } = useParams();
   const { PUBLIC_SIGNOZ_URL, PUBLIC_IS_INKEEP_CLOUD_DEPLOYMENT } = useRuntimeConfig();
   const isCloudDeployment = PUBLIC_IS_INKEEP_CLOUD_DEPLOYMENT === 'true';
 
