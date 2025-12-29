@@ -79,16 +79,14 @@ async function EditMCPPage({
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <MCPServerForm
-        initialData={initialFormData}
-        mode="update"
-        tool={mcpTool}
-        credentials={credentials}
-        tenantId={tenantId}
-        projectId={projectId}
-      />
-    </div>
+    <MCPServerForm
+      className="max-w-2xl mx-auto"
+      initialData={initialFormData}
+      tool={mcpTool}
+      credentials={credentials}
+      tenantId={tenantId}
+      projectId={projectId}
+    />
   );
 }
 
