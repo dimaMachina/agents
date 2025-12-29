@@ -137,7 +137,7 @@ export default function ConversationDetail({
             </NextLink>
           </Button>
           <div className="flex items-center gap-2">
-            <h3 className="text-xl font-light">Conversation details</h3>
+            <h3 className="text-xl font-light">Conversation Details</h3>
           </div>
         </div>
         <div className="flex items-center gap-2">

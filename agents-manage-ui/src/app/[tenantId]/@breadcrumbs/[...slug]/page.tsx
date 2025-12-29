@@ -69,7 +69,7 @@ const BreadcrumbSlot: FC<PageProps<'/[tenantId]/[...slug]'>> = async ({ params }
       }
     },
     async conversations() {
-      return 'Conversation';
+      return 'Conversation Details';
     },
   };
 
@@ -94,7 +94,10 @@ const BreadcrumbSlot: FC<PageProps<'/[tenantId]/[...slug]'>> = async ({ params }
     }
 
     href += `/${id}`;
-    crumbs.push({ label, href });
+    // This route isn't exist so we don't add it to crumbs list
+    if (href !== `/${tenantId}/projects/${projectId}/traces/conversations`) {
+      crumbs.push({ label, href });
+    }
   }
 
   return crumbs.map(({ label, href }, idx, arr) => {
