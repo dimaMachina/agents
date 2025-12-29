@@ -80,7 +80,7 @@ const BreadcrumbSlot: FC<PageProps<'/[tenantId]/[...slug]'>> = async ({ params }
         }
       }
     },
-    conversations(id) {
+    async conversations(id) {
       return `Conversation ${id.slice(0, 8)}`;
     },
   };
