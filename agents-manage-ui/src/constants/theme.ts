@@ -1,7 +1,7 @@
-export const MONACO_THEME_NAME = {
+export const MONACO_THEME_NAME = Object.freeze({
   light: 'inkeep-light',
   dark: 'inkeep-dark',
-} as const;
+});
 
 export const TEMPLATE_LANGUAGE = 'template';
 export const VARIABLE_TOKEN = 'variable';
