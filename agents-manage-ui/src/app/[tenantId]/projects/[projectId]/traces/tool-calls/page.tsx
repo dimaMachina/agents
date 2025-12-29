@@ -1,8 +1,8 @@
 'use client';
 
 import { ArrowLeft, Calendar, Server, Wrench } from 'lucide-react';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useMemo, useState, use } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -26,31 +26,23 @@ const TIME_RANGES = {
   custom: { label: 'Custom range', hours: 0 },
 } as const;
 
-interface ToolCallsBreakdownProps {
-  onBack: () => void;
-}
+export default function ToolCallsBreakdown({
+  params,
+}: PageProps<'/[tenantId]/projects/[projectId]/traces/tool-calls'>) {
+  const router = useRouter();
+  const { tenantId, projectId } = use(params);
+  const searchParams = useSearchParams();
 
-// export default function ToolCallsPage() {
-//   const router = useRouter();
-//   const { tenantId, projectId } = useParams<{ tenantId: string; projectId: string }>();
-//   const searchParams = useSearchParams();
-//
-//   const handleBackToTraces = () => {
-//     const current = new URLSearchParams(searchParams.toString());
-//     const queryString = current.toString();
-//
-//     const tracesUrl = queryString
-//         ? `/${tenantId}/projects/${projectId}/traces?${queryString}`
-//         : `/${tenantId}/projects/${projectId}/traces`;
-//
-//     router.push(tracesUrl);
-//   };
-//
-//   return <ToolCallsBreakdown onBack={handleBackToTraces} />;
-// }
+  const onBack = () => {
+    const current = new URLSearchParams(searchParams.toString());
+    const queryString = current.toString();
 
-export default function ToolCallsBreakdown({ onBack }: ToolCallsBreakdownProps) {
-  const params = useParams();
+    const tracesUrl = queryString
+      ? `/${tenantId}/projects/${projectId}/traces?${queryString}`
+      : `/${tenantId}/projects/${projectId}/traces`;
+
+    router.push(tracesUrl);
+  };
 
   const {
     timeRange,
@@ -134,9 +126,9 @@ export default function ToolCallsBreakdown({ onBack }: ToolCallsBreakdownProps) 
         const serverFilter = selectedServer === 'all' ? undefined : selectedServer;
 
         const [toolData, uniqueServers, uniqueTools] = await Promise.all([
-          client.getToolCallsByTool(startTime, endTime, serverFilter, params.projectId as string),
-          client.getUniqueToolServers(startTime, endTime, params.projectId as string),
-          client.getUniqueToolNames(startTime, endTime, params.projectId as string),
+          client.getToolCallsByTool(startTime, endTime, serverFilter, projectId),
+          client.getUniqueToolServers(startTime, endTime, projectId),
+          client.getUniqueToolNames(startTime, endTime, projectId),
         ]);
 
         setToolCalls(toolData);
@@ -151,7 +143,7 @@ export default function ToolCallsBreakdown({ onBack }: ToolCallsBreakdownProps) 
     };
 
     fetchData();
-  }, [selectedServer, startTime, endTime, params.projectId]);
+  }, [selectedServer, startTime, endTime, projectId]);
 
   const filteredToolCalls = useMemo(() => {
     return toolCalls.filter((tool) => selectedTool === 'all' || tool.toolName === selectedTool);
