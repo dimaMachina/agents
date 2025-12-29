@@ -28,10 +28,7 @@ const getNangoClient = () => {
     'https://api.nango.dev';
 
   try {
-    return new Nango({
-      secretKey,
-      host,
-    });
+    return new Nango({ secretKey, host });
   } catch (error) {
     throw new NangoError('Failed to initialize Nango client', 'new Nango', error);
   }

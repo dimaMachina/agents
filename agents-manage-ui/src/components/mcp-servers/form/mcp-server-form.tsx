@@ -87,8 +87,8 @@ export function MCPServerForm({
   };
 
   const onSubmit = async (data: MCPToolFormData) => {
+    const mode = tool ? 'update' : 'create';
     try {
-      const mode = tool ? 'update' : 'create';
       const mcpServerName = data.name;
       const isUserScoped = data.credentialScope === CredentialScopeEnum.user;
 

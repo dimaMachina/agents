@@ -16,6 +16,9 @@ interface BreadcrumbItem {
   label: string;
 }
 
+const getStaticLabel = (segment: string) =>
+  segment in STATIC_LABELS ? STATIC_LABELS[segment as keyof typeof STATIC_LABELS] : undefined;
+
 const BreadcrumbSlot: FC<PageProps<'/[tenantId]/[...slug]'>> = async ({ params }) => {
   const { tenantId, slug } = await params;
   const crumbs: BreadcrumbItem[] = [];
@@ -73,10 +76,10 @@ const BreadcrumbSlot: FC<PageProps<'/[tenantId]/[...slug]'>> = async ({ params }
       const prev = slug[index - 1];
       // this check is needed until we remove all `/[segment]/new` routes
       if (id === 'new') {
-        const parentLabel = STATIC_LABELS[prev];
+        const parentLabel = getStaticLabel(prev);
         label = parentLabel ? `New ${parentLabel.slice(0, -1)}` : 'New';
       } else {
-        label = Object.hasOwn(fetchers, prev) ? await fetchers[prev](id) : STATIC_LABELS[id];
+        label = Object.hasOwn(fetchers, prev) ? await fetchers[prev](id) : getStaticLabel(id);
         if (!label) {
           throw new Error(`Unknown breadcrumb segment "${id}"`);
         }
