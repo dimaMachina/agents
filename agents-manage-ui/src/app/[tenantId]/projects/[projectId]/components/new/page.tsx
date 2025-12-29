@@ -5,9 +5,7 @@ async function NewDataComponentPage({
 }: PageProps<'/[tenantId]/projects/[projectId]/components/new'>) {
   const { tenantId, projectId } = await params;
   return (
-    <div className="max-w-2xl mx-auto">
-      <DataComponentForm tenantId={tenantId} projectId={projectId} />
-    </div>
+    <DataComponentForm tenantId={tenantId} projectId={projectId} className="max-w-2xl mx-auto" />
   );
 }
 
