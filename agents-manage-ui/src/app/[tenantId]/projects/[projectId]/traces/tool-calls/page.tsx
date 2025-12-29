@@ -1,7 +1,7 @@
 'use client';
 
 import { ArrowLeft, Calendar, Server, Wrench } from 'lucide-react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -49,7 +49,7 @@ interface ToolCallsBreakdownProps {
 //   return <ToolCallsBreakdown onBack={handleBackToTraces} />;
 // }
 
-export function ToolCallsBreakdown({ onBack }: ToolCallsBreakdownProps) {
+export default function ToolCallsBreakdown({ onBack }: ToolCallsBreakdownProps) {
   const params = useParams();
 
   const {
