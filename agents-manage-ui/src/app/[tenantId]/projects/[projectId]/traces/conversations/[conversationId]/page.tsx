@@ -118,12 +118,10 @@ export default function ConversationDetail({
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">{error || 'Conversation not found.'}</p>
-          {onBack && (
-            <Button onClick={onBack} variant="outline" className="mt-4">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Overview
-            </Button>
-          )}
+          <Button onClick={onBack} variant="outline" className="mt-4">
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Overview
+          </Button>
         </CardContent>
       </Card>
     );
@@ -134,12 +132,10 @@ export default function ConversationDetail({
       {/* Header */}
       <div className="flex items-center justify-between mb-8 flex-shrink-0">
         <div className="flex items-center gap-2">
-          {onBack && (
-            <Button onClick={onBack} variant="ghost" size="icon-sm">
-              <ArrowLeft className="h-4 w-4" />
-              <span className="sr-only">Back</span>
-            </Button>
-          )}
+          <Button onClick={onBack} variant="ghost" size="icon-sm">
+            <ArrowLeft className="h-4 w-4" />
+            <span className="sr-only">Back</span>
+          </Button>
           <div className="flex items-center gap-2">
             <h3 className="text-xl font-light">Conversation details</h3>
           </div>

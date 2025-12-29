@@ -27,7 +27,6 @@ const Layout: FC<LayoutProps<'/[tenantId]'>> = ({ children, breadcrumbs }) => {
           <div
             className={cn(
               'flex overflow-y-auto',
-              'bg-muted/20 dark:bg-background',
               'scrollbar-thin scrollbar-track-transparent',
               'scrollbar-thumb-muted-foreground/30 dark:scrollbar-thumb-muted-foreground/50'
             )}
