@@ -1,7 +1,7 @@
 'use client';
 
 import { ArrowLeft, Brain, Calendar, Cpu, MessageSquare } from 'lucide-react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -34,6 +34,22 @@ interface AICallsBreakdownProps {
 export function AICallsBreakdown({ onBack }: AICallsBreakdownProps) {
   const params = useParams();
   const tenantId = params.tenantId as string;
+
+  // const router = useRouter();
+  // const { tenantId, projectId } = useParams<{ tenantId: string; projectId: string }>();
+  // const searchParams = useSearchParams();
+  //
+  // const handleBackToTraces = () => {
+  //   // Preserve the current search params when going back to traces
+  //   const current = new URLSearchParams(searchParams.toString());
+  //   const queryString = current.toString();
+  //
+  //   const tracesUrl = queryString
+  //       ? `/${tenantId}/projects/${projectId}/traces?${queryString}`
+  //       : `/${tenantId}/projects/${projectId}/traces`;
+  //
+  //   router.push(tracesUrl);
+  // };
 
   // Use nuqs for type-safe query state management
   const {
