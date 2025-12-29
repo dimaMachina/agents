@@ -11,13 +11,12 @@ async function ExternalAgentPage({
   try {
     const externalAgent = await fetchExternalAgent(tenantId, projectId, externalAgentId);
     return (
-      <div className="max-w-2xl mx-auto">
-        <ViewExternalAgentDetails
-          externalAgent={externalAgent}
-          tenantId={tenantId}
-          projectId={projectId}
-        />
-      </div>
+      <ViewExternalAgentDetails
+        className="max-w-2xl mx-auto"
+        externalAgent={externalAgent}
+        tenantId={tenantId}
+        projectId={projectId}
+      />
     );
   } catch (error) {
     return (
