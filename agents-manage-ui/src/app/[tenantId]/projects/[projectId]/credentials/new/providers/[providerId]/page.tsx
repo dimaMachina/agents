@@ -2,6 +2,7 @@
 
 import { CredentialStoreType, DEFAULT_NANGO_STORE_ID } from '@inkeep/agents-core/client-exports';
 import type { ApiProvider } from '@nangohq/types';
+import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { use, useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -129,9 +130,7 @@ function ProviderSetupPage({
     }
   }, [provider, loading, hasAttempted, handleCreateCredential]);
 
-  const handleBack = () => {
-    router.push(`/${tenantId}/projects/${projectId}/credentials/new/providers`);
-  };
+  const backLink = `/${tenantId}/projects/${projectId}/credentials/new/providers` as const;
 
   if (providersLoading) {
     return <div className="flex items-center justify-center h-64">Loading provider...</div>;
@@ -144,9 +143,9 @@ function ProviderSetupPage({
         <p className="text-muted-foreground">
           The provider "{decodeURIComponent(providerId)}" was not found.
         </p>
-        <button type="button" onClick={handleBack} className="text-primary hover:underline">
-          ← Back to providers
-        </button>
+        <Button asChild>
+          <NextLink href={backLink}>Back to providers</NextLink>
+        </Button>
       </div>
     );
   }
@@ -161,7 +160,9 @@ function ProviderSetupPage({
           <p className="text-muted-foreground">
             Please wait while we connect to {provider.name}...
           </p>
-          <Button onClick={handleBack}>Back to providers</Button>
+          <Button asChild>
+            <NextLink href={backLink}>Back to providers</NextLink>
+          </Button>
         </div>
       </div>
     );
@@ -171,7 +172,7 @@ function ProviderSetupPage({
     <GenericAuthForm
       className="max-w-2xl mx-auto"
       provider={provider}
-      onBack={handleBack}
+      backLink={backLink}
       onSubmit={handleCreateCredential}
       loading={loading}
     />

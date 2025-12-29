@@ -2,6 +2,8 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { ApiProvider } from '@nangohq/types';
+import { ArrowLeft } from 'lucide-react';
+import NextLink from 'next/link';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { GenericInput } from '@/components/form/generic-input';
@@ -14,7 +16,7 @@ import { type FieldConfig, type FormSection, getFormConfig } from './auth-form-c
 
 interface GenericAuthFormProps {
   provider: ApiProvider;
-  onBack: () => void;
+  backLink: string;
   onSubmit: (credentials: Record<string, any>) => void;
   loading?: boolean;
   className?: string;
@@ -60,7 +62,7 @@ function createFormSchema(formConfig: NonNullable<ReturnType<typeof getFormConfi
 
 export function GenericAuthForm({
   provider,
-  onBack,
+  backLink,
   onSubmit,
   loading = false,
   className,
@@ -84,17 +86,17 @@ export function GenericAuthForm({
 
   if (!formConfig) {
     return (
-      <div className={cn('space-y-6', className)}>
-        <div className="flex items-center gap-4">
-          <Button variant="outline" onClick={onBack}>
-            ← Back
-          </Button>
-          <div>
-            <h1 className="text-2xl font-bold">Configuration Not Available</h1>
-            <p className="text-muted-foreground">
-              No configuration form is available for {provider.auth_mode} authentication mode.
-            </p>
-          </div>
+      <div className={cn('flex items-center gap-4 h-full', className)}>
+        <Button variant="outline" asChild>
+          <NextLink href={backLink}>
+            <ArrowLeft /> Back
+          </NextLink>
+        </Button>
+        <div>
+          <h1 className="text-2xl font-bold">Configuration Not Available</h1>
+          <p className="text-muted-foreground">
+            No configuration form is available for {provider.auth_mode} authentication mode.
+          </p>
         </div>
       </div>
     );
@@ -186,8 +188,8 @@ export function GenericAuthForm({
             <Button type="submit" disabled={loading}>
               {loading ? 'Creating Credential...' : 'Create Credential'}
             </Button>
-            <Button type="button" variant="outline" onClick={onBack} disabled={loading}>
-              Cancel
+            <Button type="button" variant="outline" asChild disabled={loading}>
+              <NextLink href={backLink}>Cancel</NextLink>
             </Button>
           </div>
         </form>
