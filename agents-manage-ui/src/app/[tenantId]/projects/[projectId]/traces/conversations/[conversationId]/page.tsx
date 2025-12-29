@@ -311,7 +311,7 @@ export default function ConversationDetail({
                       className="mt-3 w-full flex items-center justify-center gap-1"
                       onClick={() => {
                         window.open(
-                          getSignozTracesExplorerUrl(conversationId as string, PUBLIC_SIGNOZ_URL),
+                          getSignozTracesExplorerUrl(conversationId, PUBLIC_SIGNOZ_URL),
                           '_blank'
                         );
                       }}

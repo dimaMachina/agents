@@ -1,8 +1,14 @@
 'use client';
 
 import { AlertTriangle, ArrowRightLeft, SparklesIcon, Users, Wrench } from 'lucide-react';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { use, useEffect, useMemo, useState } from 'react';
+import { AreaChartCard } from '@/components/traces/charts/area-chart-card';
+import { StatCard } from '@/components/traces/charts/stat-card';
+import { ConversationStatsCard } from '@/components/traces/conversation-stats/conversation-stats-card';
+import { AgentFilter } from '@/components/traces/filters/agent-filter';
+import { CUSTOM, DatePickerWithPresets } from '@/components/traces/filters/date-picker';
+import { SpanFilters } from '@/components/traces/filters/span-filters';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Card, CardContent } from '@/components/ui/card';
 import { ExternalLink } from '@/components/ui/external-link';
@@ -11,12 +17,6 @@ import { useSignozConfig } from '@/hooks/use-signoz-config';
 import { useAggregateStats, useConversationStats } from '@/hooks/use-traces';
 import { type TimeRange, useTracesQueryState } from '@/hooks/use-traces-query-state';
 import { getSigNozStatsClient, type SpanFilterOptions } from '@/lib/api/signoz-stats';
-import { AreaChartCard } from './charts/area-chart-card';
-import { StatCard } from './charts/stat-card';
-import { ConversationStatsCard } from './conversation-stats/conversation-stats-card';
-import { AgentFilter } from './filters/agent-filter';
-import { CUSTOM, DatePickerWithPresets } from './filters/date-picker';
-import { SpanFilters } from './filters/span-filters';
 
 // Time range options
 const TIME_RANGES = {
@@ -25,13 +25,11 @@ const TIME_RANGES = {
   '15d': { label: 'Last 15 days', hours: 24 * 15 },
 } as const;
 
-interface TracesOverviewProps {
-  refreshKey?: number;
-}
-
-export function TracesOverview({ refreshKey }: TracesOverviewProps) {
+export default function TracesOverview({
+  params,
+}: PageProps<'/[tenantId]/projects/[projectId]/traces'>) {
   const router = useRouter();
-  const { tenantId, projectId } = useParams();
+  const { tenantId, projectId } = use(params);
   const searchParams = useSearchParams();
   const {
     timeRange: selectedTimeRange,
@@ -123,8 +121,8 @@ export function TracesOverview({ refreshKey }: TracesOverviewProps) {
     startTime,
     endTime,
     filters: spanFilters,
-    projectId: projectId as string,
-    tenantId: tenantId as string,
+    projectId,
+    tenantId,
     agentId: selectedAgent,
   });
 
@@ -132,8 +130,8 @@ export function TracesOverview({ refreshKey }: TracesOverviewProps) {
     startTime,
     endTime,
     filters: spanFilters,
-    projectId: projectId as string,
-    tenantId: tenantId as string,
+    projectId,
+    tenantId,
     searchQuery: debouncedSearchQuery,
     pagination: { pageSize: 10 },
     agentId: selectedAgent,
@@ -156,7 +154,7 @@ export function TracesOverview({ refreshKey }: TracesOverviewProps) {
     const fetchActivity = async () => {
       try {
         setActivityLoading(true);
-        const client = getSigNozStatsClient(tenantId as string);
+        const client = getSigNozStatsClient(tenantId);
         const agentId = selectedAgent ? selectedAgent : undefined;
         console.log('🔍 Fetching activity data:', {
           startTime,
@@ -164,12 +162,7 @@ export function TracesOverview({ refreshKey }: TracesOverviewProps) {
           agentId,
           selectedAgent,
         });
-        const data = await client.getConversationsPerDay(
-          startTime,
-          endTime,
-          agentId,
-          projectId as string
-        );
+        const data = await client.getConversationsPerDay(startTime, endTime, agentId, projectId);
         console.log('🔍 Activity data received:', data);
         setActivityData(data);
       } catch (e) {
@@ -191,12 +184,12 @@ export function TracesOverview({ refreshKey }: TracesOverviewProps) {
 
       setSpanNamesLoading(true);
       try {
-        const client = getSigNozStatsClient(tenantId as string);
+        const client = getSigNozStatsClient(tenantId);
         const spanNames = await client.getAvailableSpanNames(
           startTime,
           endTime,
           selectedAgent,
-          projectId as string
+          projectId
         );
         setAvailableSpanNames(spanNames);
       } catch (error) {
@@ -416,7 +409,7 @@ export function TracesOverview({ refreshKey }: TracesOverviewProps) {
         stats={stats}
         loading={loading}
         error={error}
-        projectId={projectId as string}
+        projectId={projectId}
         selectedTimeRange={selectedTimeRange}
         pagination={pagination}
         searchQuery={searchQuery}
