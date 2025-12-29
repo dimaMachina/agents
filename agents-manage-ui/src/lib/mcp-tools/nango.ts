@@ -11,6 +11,7 @@ import type {
   ApiPublicIntegrationCredentials,
   PostConnectSessions,
 } from '@nangohq/types';
+import { cache } from 'react';
 import { DEFAULT_TENANT_ID } from '@/lib/runtime-config/defaults';
 import { NangoError, wrapNangoError } from './nango-types';
 
@@ -37,7 +38,7 @@ const getNangoClient = () => {
 /**
  * Fetch all available Nango providers
  */
-export async function fetchNangoProviders(): Promise<ApiProvider[]> {
+async function $fetchNangoProviders(): Promise<ApiProvider[]> {
   try {
     const nango = getNangoClient();
     const response = await nango.listProviders({});
@@ -47,6 +48,8 @@ export async function fetchNangoProviders(): Promise<ApiProvider[]> {
     wrapNangoError(error, 'Unable to retrieve available providers from Nango', 'listProviders');
   }
 }
+
+export const fetchNangoProviders = cache($fetchNangoProviders);
 
 /**
  * Fetch a specific Nango integration
