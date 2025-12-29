@@ -50,7 +50,7 @@ export default function TracesOverview({
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
   const [availableSpanNames, setAvailableSpanNames] = useState<string[]>([]);
   const [spanNamesLoading, setSpanNamesLoading] = useState(false);
-  const [activityData, setActivityData] = useState<Array<{ date: string; count: number }>>([]);
+  const [activityData, setActivityData] = useState<{ date: string; count: number }[]>([]);
   const [activityLoading, setActivityLoading] = useState(true);
 
   // Calculate time range based on selection
@@ -116,7 +116,6 @@ export default function TracesOverview({
     aggregateStats,
     loading: aggregateLoading,
     error: aggregateError,
-    refresh: refreshAggregateStats,
   } = useAggregateStats({
     startTime,
     endTime,
@@ -126,7 +125,7 @@ export default function TracesOverview({
     agentId: selectedAgent,
   });
 
-  const { stats, loading, error, refresh, pagination } = useConversationStats({
+  const { stats, loading, error, pagination } = useConversationStats({
     startTime,
     endTime,
     filters: spanFilters,
@@ -136,16 +135,6 @@ export default function TracesOverview({
     pagination: { pageSize: 10 },
     agentId: selectedAgent,
   });
-
-  // Server-side pagination is now handled by the hook
-
-  // Refresh data when refreshKey changes
-  useEffect(() => {
-    if (refreshKey && refreshKey > 0) {
-      refresh();
-      refreshAggregateStats();
-    }
-  }, [refreshKey, refresh, refreshAggregateStats]);
 
   // Aggregate stats now come directly from server-side aggregation
 
