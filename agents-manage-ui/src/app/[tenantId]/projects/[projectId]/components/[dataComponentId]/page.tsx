@@ -14,20 +14,19 @@ export default async function DataComponentPage({
     const dataComponent = await fetchDataComponent(tenantId, projectId, dataComponentId);
     const { name, description, props, render } = dataComponent;
     return (
-      <div className="max-w-2xl mx-auto">
-        <DataComponentForm
-          tenantId={tenantId}
-          projectId={projectId}
-          id={dataComponentId}
-          initialData={{
-            id: dataComponentId,
-            name,
-            description: description ?? '',
-            props,
-            render,
-          }}
-        />
-      </div>
+      <DataComponentForm
+        className="max-w-2xl mx-auto"
+        tenantId={tenantId}
+        projectId={projectId}
+        id={dataComponentId}
+        initialData={{
+          id: dataComponentId,
+          name,
+          description: description ?? '',
+          props,
+          render,
+        }}
+      />
     );
   } catch (error) {
     return (
