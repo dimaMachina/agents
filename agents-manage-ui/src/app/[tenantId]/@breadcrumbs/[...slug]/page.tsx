@@ -16,8 +16,11 @@ interface BreadcrumbItem {
   label: string;
 }
 
-const getStaticLabel = (segment: string) =>
-  segment in STATIC_LABELS ? STATIC_LABELS[segment as keyof typeof STATIC_LABELS] : undefined;
+function getStaticLabel(segment: string) {
+  return segment in STATIC_LABELS
+    ? STATIC_LABELS[segment as keyof typeof STATIC_LABELS]
+    : undefined;
+}
 
 const BreadcrumbSlot: FC<PageProps<'/[tenantId]/[...slug]'>> = async ({ params }) => {
   const { tenantId, slug } = await params;
