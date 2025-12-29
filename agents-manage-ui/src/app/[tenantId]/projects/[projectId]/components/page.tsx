@@ -1,6 +1,6 @@
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
-import { DataComponentsList } from '@/components/data-components/data-components-list';
+import { DataComponentItem } from '@/components/data-components/data-component-item';
 import FullPageError from '@/components/errors/full-page-error';
 import EmptyState from '@/components/layout/empty-state';
 import { PageHeader } from '@/components/layout/page-header';
@@ -35,7 +35,16 @@ async function DataComponentsPage({
             </Button>
           }
         />
-        <DataComponentsList tenantId={tenantId} projectId={projectId} dataComponents={data} />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
+          {data.map((dataComponent) => (
+            <DataComponentItem
+              key={dataComponent.id}
+              {...dataComponent}
+              tenantId={tenantId}
+              projectId={projectId}
+            />
+          ))}
+        </div>
       </>
     ) : (
       <EmptyState
