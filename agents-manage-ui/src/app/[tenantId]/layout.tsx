@@ -34,7 +34,7 @@ const Layout: FC<LayoutProps<'/[tenantId]'>> = ({ children, breadcrumbs }) => {
           >
             <main
               id="main-content"
-              className="@container p-6 min-h-0 flex-1 [&:has(>.no-container-padding)]:p-0"
+              className="@container p-6 flex-1 [&:has(>.no-container-padding)]:p-0"
             >
               {children}
             </main>
