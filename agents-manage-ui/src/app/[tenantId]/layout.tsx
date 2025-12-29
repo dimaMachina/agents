@@ -24,20 +24,17 @@ const Layout: FC<LayoutProps<'/[tenantId]'>> = ({ children, breadcrumbs }) => {
             />
             <HeaderMenus />
           </header>
-          <div
+          <main
+            id="main-content"
             className={cn(
-              'flex flex-1 overflow-y-auto',
+              'flex flex-col flex-1 @container',
+              'overflow-y-auto',
               'scrollbar-thin scrollbar-track-transparent',
               'scrollbar-thumb-muted-foreground/30 dark:scrollbar-thumb-muted-foreground/50'
             )}
           >
-            <main
-              id="main-content"
-              className="@container p-6 flex-1 [&:has(>.no-container-padding)]:p-0"
-            >
-              {children}
-            </main>
-          </div>
+            <div className="flex-1 p-6 [&:has(>.no-container)]:contents">{children}</div>
+          </main>
         </div>
       </SidebarInset>
     </AppSidebarProvider>

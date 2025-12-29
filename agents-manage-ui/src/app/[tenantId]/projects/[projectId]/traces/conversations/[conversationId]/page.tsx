@@ -7,7 +7,7 @@ import {
   MessageSquare,
   TriangleAlert,
 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import NextLink from 'next/link';
 import { use, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { formatDateTime, formatDuration } from '@/app/utils/format-date';
@@ -31,12 +31,8 @@ import { copyTraceToClipboard } from '@/lib/utils/trace-formatter';
 export default function ConversationDetail({
   params,
 }: PageProps<'/[tenantId]/projects/[projectId]/traces/conversations/[conversationId]'>) {
-  const router = useRouter();
   const { conversationId, tenantId, projectId } = use(params);
-
-  const onBack = () => {
-    router.push(`/${tenantId}/projects/${projectId}/traces`);
-  };
+  const backLink = `/${tenantId}/projects/${projectId}/traces` as const;
 
   const [conversation, setConversation] = useState<ConversationDetailType | null>(null);
   const [loading, setLoading] = useState(true);
@@ -118,9 +114,11 @@ export default function ConversationDetail({
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">{error || 'Conversation not found.'}</p>
-          <Button onClick={onBack} variant="outline" className="mt-4">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Overview
+          <Button asChild variant="outline" className="mt-4">
+            <NextLink href={backLink}>
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Overview
+            </NextLink>
           </Button>
         </CardContent>
       </Card>
@@ -128,13 +126,15 @@ export default function ConversationDetail({
   }
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col no-container p-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-8 flex-shrink-0">
         <div className="flex items-center gap-2">
-          <Button onClick={onBack} variant="ghost" size="icon-sm">
-            <ArrowLeft className="h-4 w-4" />
-            <span className="sr-only">Back</span>
+          <Button asChild variant="ghost" size="icon-sm">
+            <NextLink href={backLink}>
+              <ArrowLeft className="h-4 w-4" />
+              <span className="sr-only">Back</span>
+            </NextLink>
           </Button>
           <div className="flex items-center gap-2">
             <h3 className="text-xl font-light">Conversation details</h3>
