@@ -25,9 +25,9 @@ const STATIC_LABELS: Record<string, string> = {
   bearer: 'Bearer',
   edit: 'Edit',
   providers: 'Providers',
+  'tool-calls': 'Tool Calls',
   // conversations: 'Conversations',
   // 'ai-calls': 'AI Calls',
-  // 'tool-calls': 'Tool Calls',
 };
 
 interface BreadcrumbItem {
