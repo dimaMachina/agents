@@ -87,7 +87,6 @@ const BreadcrumbSlot: FC<PageProps<'/[tenantId]/[...slug]'>> = async ({ params }
 
   for (const [index, id] of slug.entries()) {
     let label: string | undefined;
-
     try {
       const prev = slug[index - 1];
       // this check is needed until we remove all `/[segment]/new` routes
@@ -110,24 +109,23 @@ const BreadcrumbSlot: FC<PageProps<'/[tenantId]/[...slug]'>> = async ({ params }
     crumbs.push({ label, href });
   }
 
-  return crumbs.map((item, idx, arr) => {
+  return crumbs.map(({ label, href }, idx, arr) => {
     const isLast = idx === arr.length - 1;
-
     return (
       <li
-        key={item.href}
+        key={href}
+        aria-current={isLast ? 'page' : undefined}
         className={
           isLast
             ? 'font-medium text-foreground'
             : 'after:ml-2 after:content-["/"] after:text-muted-foreground/60'
         }
-        aria-current={isLast ? 'page' : undefined}
       >
         {isLast ? (
-          item.label
+          label
         ) : (
-          <Link href={item.href} className="hover:text-foreground">
-            {item.label}
+          <Link href={href} className="hover:text-foreground">
+            {label}
           </Link>
         )}
       </li>

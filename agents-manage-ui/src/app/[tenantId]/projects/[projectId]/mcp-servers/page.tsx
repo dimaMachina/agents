@@ -3,7 +3,7 @@ import Link from 'next/link';
 import FullPageError from '@/components/errors/full-page-error';
 import EmptyState from '@/components/layout/empty-state';
 import { PageHeader } from '@/components/layout/page-header';
-import { MCPToolsList } from '@/components/mcp-servers/mcp-tools-list';
+import { MCPToolItem } from '@/components/mcp-servers/mcp-tool-item';
 import { Button } from '@/components/ui/button';
 import { fetchMCPTools } from '@/lib/api/tools';
 import { getErrorCode } from '@/lib/utils/error-serialization';
@@ -34,7 +34,11 @@ async function MCPServersPage({
             </Button>
           }
         />
-        <MCPToolsList tools={tools} />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
+          {tools.map((tool) => (
+            <MCPToolItem key={tool.id} tenantId={tenantId} projectId={projectId} tool={tool} />
+          ))}
+        </div>
       </>
     ) : (
       <EmptyState
