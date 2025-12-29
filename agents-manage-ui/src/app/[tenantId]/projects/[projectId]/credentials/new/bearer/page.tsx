@@ -16,8 +16,6 @@ import { generateId } from '@/lib/utils/id-utils';
 import { CredentialForm } from '@/components/credentials/views/credential-form';
 import { CredentialFormInkeepCloud } from '@/components/credentials/views/credential-form-inkeep-cloud';
 
-// className="max-w-2xl mx-auto"
-
 export default function NewCredentialForm({
   params,
 }: PageProps<'/[tenantId]/projects/[projectId]/credentials/new/bearer'>) {
@@ -110,21 +108,16 @@ export default function NewCredentialForm({
     }
   };
 
-  if (PUBLIC_IS_INKEEP_CLOUD_DEPLOYMENT === 'true') {
-    return (
-      <CredentialFormInkeepCloud
+  const FormToUse =
+    PUBLIC_IS_INKEEP_CLOUD_DEPLOYMENT === 'true' ? CredentialFormInkeepCloud : CredentialForm;
+
+  return (
+    <div className="max-w-2xl mx-auto">
+      <FormToUse
         onCreateCredential={handleCreateCredential}
         tenantId={tenantId}
         projectId={projectId}
       />
-    );
-  }
-
-  return (
-    <CredentialForm
-      onCreateCredential={handleCreateCredential}
-      tenantId={tenantId}
-      projectId={projectId}
-    />
+    </div>
   );
 }
