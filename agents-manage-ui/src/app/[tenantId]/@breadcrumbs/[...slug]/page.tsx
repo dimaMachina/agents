@@ -15,7 +15,6 @@ const STATIC_LABELS: Record<string, string> = {
   agents: 'Agents',
   'api-keys': 'API keys',
   artifacts: 'Artifacts',
-  new: 'New',
   settings: 'Settings',
   traces: 'Traces',
   credentials: 'Credentials',
@@ -81,8 +80,8 @@ const BreadcrumbSlot: FC<PageProps<'/[tenantId]/[...slug]'>> = async ({ params }
         }
       }
     },
-    async conversations(id) {
-      return `Conversation ${id.slice(0, 8)}`;
+    async conversations() {
+      return 'Conversation';
     },
   };
 
@@ -90,17 +89,16 @@ const BreadcrumbSlot: FC<PageProps<'/[tenantId]/[...slug]'>> = async ({ params }
     let label: string | undefined;
 
     try {
+      const prev = slug[index - 1];
       // this check is needed until we remove all `/[segment]/new` routes
-      if (id !== 'new') {
-        const prev = slug[index - 1];
-        if (Object.hasOwn(fetchers, prev)) {
-          label = await fetchers[prev](id);
+      if (id === 'new') {
+        const parentLabel = STATIC_LABELS[prev];
+        label = parentLabel ? `New ${parentLabel.slice(0, -1)}` : 'New';
+      } else {
+        label = Object.hasOwn(fetchers, prev) ? await fetchers[prev](id) : STATIC_LABELS[id];
+        if (!label) {
+          throw new Error(`Unknown breadcrumb segment "${id}"`);
         }
-      }
-
-      label ??= STATIC_LABELS[id];
-      if (!label) {
-        throw new Error(`Unknown breadcrumb segment "${id}"`);
       }
     } catch (error) {
       const errorCode = getErrorCode(error);
