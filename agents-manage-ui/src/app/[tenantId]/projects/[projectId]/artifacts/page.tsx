@@ -1,6 +1,6 @@
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
-import { ArtifactComponentsList } from '@/components/artifact-components/artifact-component-list';
+import { ArtifactComponentItem } from '@/components/artifact-components/artifact-component-item';
 import FullPageError from '@/components/errors/full-page-error';
 import EmptyState from '@/components/layout/empty-state';
 import { PageHeader } from '@/components/layout/page-header';
@@ -30,7 +30,16 @@ async function ArtifactComponentsPage({
             </Button>
           }
         />
-        <ArtifactComponentsList tenantId={tenantId} projectId={projectId} artifacts={data} />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
+          {data.map((artifact) => (
+            <ArtifactComponentItem
+              key={artifact.id}
+              {...artifact}
+              tenantId={tenantId}
+              projectId={projectId}
+            />
+          ))}
+        </div>
       </>
     ) : (
       <EmptyState
