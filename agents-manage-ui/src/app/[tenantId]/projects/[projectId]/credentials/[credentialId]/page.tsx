@@ -32,14 +32,13 @@ async function EditCredentialsPage({
     const credential = await fetchCredential(tenantId, projectId, credentialId);
     const initialFormData = await credentialToFormData(credential);
     return (
-      <div className="max-w-2xl mx-auto">
-        <EditCredentialForm
-          tenantId={tenantId}
-          projectId={projectId}
-          credential={credential}
-          initialFormData={initialFormData}
-        />
-      </div>
+      <EditCredentialForm
+        className="max-w-2xl mx-auto"
+        tenantId={tenantId}
+        projectId={projectId}
+        credential={credential}
+        initialFormData={initialFormData}
+      />
     );
   } catch (error) {
     return (

@@ -11,11 +11,11 @@ import { Form } from '@/components/ui/form';
 import { Separator } from '@/components/ui/separator';
 import { useAutoPrefillId } from '@/hooks/use-auto-prefill-id';
 import { createProjectAction, updateProjectAction } from '@/lib/actions/projects';
+import { cn } from '@/lib/utils';
 import { defaultValues } from './form-configuration';
 import { ProjectModelsSection } from './project-models-section';
 import { ProjectStopWhenSection } from './project-stopwhen-section';
 import { type ProjectFormData, projectSchema } from './validation';
-import { cn } from '@/lib/utils';
 
 interface ProjectFormProps {
   tenantId: string;
