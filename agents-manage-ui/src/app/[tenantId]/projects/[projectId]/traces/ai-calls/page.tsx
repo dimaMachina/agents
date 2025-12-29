@@ -1,7 +1,8 @@
 'use client';
 
 import { ArrowLeft, Brain, Calendar, Cpu, MessageSquare } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import NextLink from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { use, useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -30,21 +31,18 @@ const TIME_RANGES = {
 export default function AICallsBreakdown({
   params,
 }: PageProps<'/[tenantId]/projects/[projectId]/traces/ai-calls'>) {
-  const router = useRouter();
   const { tenantId, projectId } = use(params);
   const searchParams = useSearchParams();
 
-  const onBack = () => {
+  const backLink = useMemo(() => {
     // Preserve the current search params when going back to traces
     const current = new URLSearchParams(searchParams.toString());
     const queryString = current.toString();
 
-    const tracesUrl = queryString
+    return queryString
       ? `/${tenantId}/projects/${projectId}/traces?${queryString}`
       : `/${tenantId}/projects/${projectId}/traces`;
-
-    router.push(tracesUrl);
-  };
+  }, [projectId, tenantId, searchParams]);
 
   // Use nuqs for type-safe query state management
   const {
@@ -182,9 +180,11 @@ export default function AICallsBreakdown({
     <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Button variant="ghost" size="sm" onClick={onBack} className="gap-2">
-          <ArrowLeft className="h-4 w-4" />
-          Back to Overview
+        <Button variant="ghost" size="sm" asChild className="gap-2">
+          <NextLink href={backLink}>
+            <ArrowLeft className="h-4 w-4" />
+            Back to Overview
+          </NextLink>
         </Button>
         <div>
           <h1 className="text-2xl font-bold text-foreground">AI Calls Breakdown</h1>
