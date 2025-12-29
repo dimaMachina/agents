@@ -5,6 +5,8 @@ import { CredentialStoreType } from '@inkeep/agents-core/types';
 import { useRouter } from 'next/navigation';
 import { use } from 'react';
 import { toast } from 'sonner';
+import { CredentialForm } from '@/components/credentials/views/credential-form';
+import { CredentialFormInkeepCloud } from '@/components/credentials/views/credential-form-inkeep-cloud';
 import type { CredentialFormData } from '@/components/credentials/views/credential-form-validation';
 import { useRuntimeConfig } from '@/contexts/runtime-config-context';
 import { useAuthSession } from '@/hooks/use-auth';
@@ -13,8 +15,6 @@ import { updateExternalAgent } from '@/lib/api/external-agents';
 import { updateMCPTool } from '@/lib/api/tools';
 import { findOrCreateCredential } from '@/lib/utils/credentials-utils';
 import { generateId } from '@/lib/utils/id-utils';
-import { CredentialForm } from '@/components/credentials/views/credential-form';
-import { CredentialFormInkeepCloud } from '@/components/credentials/views/credential-form-inkeep-cloud';
 
 export default function NewCredentialForm({
   params,
