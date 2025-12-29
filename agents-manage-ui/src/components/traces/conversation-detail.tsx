@@ -34,6 +34,13 @@ interface ConversationDetailProps {
 }
 
 export function ConversationDetail({ conversationId, onBack }: ConversationDetailProps) {
+  // const router = useRouter();
+  // const { conversationId, tenantId, projectId } = use(params);
+  //
+  // const handleBackToTraces = () => {
+  //   router.push(`/${tenantId}/projects/${projectId}/traces`);
+  // };
+
   const [conversation, setConversation] = useState<ConversationDetailType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
