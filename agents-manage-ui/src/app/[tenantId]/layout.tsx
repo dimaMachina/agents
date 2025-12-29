@@ -26,7 +26,7 @@ const Layout: FC<LayoutProps<'/[tenantId]'>> = ({ children, breadcrumbs }) => {
           </header>
           <div
             className={cn(
-              'flex overflow-y-auto',
+              'flex flex-1 overflow-y-auto',
               'scrollbar-thin scrollbar-track-transparent',
               'scrollbar-thumb-muted-foreground/30 dark:scrollbar-thumb-muted-foreground/50'
             )}
