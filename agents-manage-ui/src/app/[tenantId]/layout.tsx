@@ -26,16 +26,18 @@ const Layout: FC<LayoutProps<'/[tenantId]'>> = ({ children, breadcrumbs }) => {
           </header>
           <div
             className={cn(
-              'flex flex-1 overflow-y-auto scrollbar-thin',
-              'scrollbar-thumb-muted-foreground/30 dark:scrollbar-thumb-muted-foreground/50 scrollbar-track-transparent bg-muted/20 dark:bg-background'
+              'flex overflow-y-auto',
+              'bg-muted/20 dark:bg-background',
+              'scrollbar-thin scrollbar-track-transparent',
+              'scrollbar-thumb-muted-foreground/30 dark:scrollbar-thumb-muted-foreground/50'
             )}
           >
-            <div
+            <main
               id="main-content"
               className="@container p-6 min-h-0 flex-1 [&:has(>.no-container-padding)]:p-0"
             >
               {children}
-            </div>
+            </main>
           </div>
         </div>
       </SidebarInset>
