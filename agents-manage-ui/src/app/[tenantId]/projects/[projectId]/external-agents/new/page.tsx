@@ -13,14 +13,12 @@ async function NewExternalAgentPage({
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <ExternalAgentForm
-        mode="create"
-        credentials={credentials}
-        tenantId={tenantId}
-        projectId={projectId}
-      />
-    </div>
+    <ExternalAgentForm
+      className="max-w-2xl mx-auto"
+      credentials={credentials}
+      tenantId={tenantId}
+      projectId={projectId}
+    />
   );
 }
 

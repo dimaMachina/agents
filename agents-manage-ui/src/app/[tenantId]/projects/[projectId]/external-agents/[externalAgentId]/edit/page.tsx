@@ -51,16 +51,14 @@ async function EditExternalAgentPage({
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <ExternalAgentForm
-        initialData={initialFormData}
-        mode="update"
-        externalAgent={externalAgent}
-        credentials={credentials}
-        tenantId={tenantId}
-        projectId={projectId}
-      />
-    </div>
+    <ExternalAgentForm
+      className="max-w-2xl mx-auto"
+      initialData={initialFormData}
+      externalAgent={externalAgent}
+      credentials={credentials}
+      tenantId={tenantId}
+      projectId={projectId}
+    />
   );
 }
 

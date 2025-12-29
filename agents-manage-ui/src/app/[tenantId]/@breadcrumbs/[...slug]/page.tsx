@@ -23,6 +23,7 @@ const STATIC_LABELS: Record<string, string> = {
   'external-agents': 'External Agents',
   'mcp-servers': 'MCP Servers',
   bearer: 'Bearer',
+  edit: 'Edit',
   // conversations: 'Conversations',
   // 'ai-calls': 'AI Calls',
   // 'tool-calls': 'Tool Calls',
