@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { FC } from 'react';
+import { STATIC_LABELS } from '@/constants/theme';
 import { getFullAgentAction } from '@/lib/actions/agent-full';
 import { fetchArtifactComponent } from '@/lib/api/artifact-components';
 import { fetchCredential } from '@/lib/api/credentials';
@@ -9,25 +10,6 @@ import { fetchProject } from '@/lib/api/projects';
 import { fetchMCPTool } from '@/lib/api/tools';
 import { fetchNangoProviders } from '@/lib/mcp-tools/nango';
 import { getErrorCode, getStatusCodeFromErrorCode } from '@/lib/utils/error-serialization';
-
-const STATIC_LABELS: Record<string, string> = {
-  projects: 'Projects',
-  agents: 'Agents',
-  'api-keys': 'API keys',
-  artifacts: 'Artifacts',
-  settings: 'Settings',
-  traces: 'Traces',
-  credentials: 'Credentials',
-  components: 'Components',
-  'external-agents': 'External Agents',
-  'mcp-servers': 'MCP Servers',
-  bearer: 'Bearer',
-  edit: 'Edit',
-  providers: 'Providers',
-  'tool-calls': 'Tool Calls',
-  'ai-calls': 'AI Calls',
-  conversations: 'Conversations',
-};
 
 interface BreadcrumbItem {
   href: string;
