@@ -6,6 +6,10 @@ export const MONACO_THEME_NAME = Object.freeze({
 export const TEMPLATE_LANGUAGE = 'template';
 export const VARIABLE_TOKEN = 'variable';
 
+/**
+ * Used in `/[tenantId]/@breadcrumbs/[...slug]/page.tsx` parallel route and sidebar-nav/app-sidebar
+ * In the future can be used for i18n.
+ */
 export const STATIC_LABELS = Object.freeze({
   projects: 'Projects',
   agents: 'Agents',
