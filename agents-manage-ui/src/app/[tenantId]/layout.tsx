@@ -26,17 +26,13 @@ const Layout: FC<LayoutProps<'/[tenantId]'>> = ({ children, breadcrumbs }) => {
           </header>
           <div
             className={cn(
-              'flex flex-col flex-1 overflow-y-auto scrollbar-thin',
-              'scrollbar-thumb-muted-foreground/30 dark:scrollbar-thumb-muted-foreground/50 scrollbar-track-transparent h-full w-full min-h-0 bg-muted/20 dark:bg-background'
+              'flex flex-1 overflow-y-auto scrollbar-thin',
+              'scrollbar-thumb-muted-foreground/30 dark:scrollbar-thumb-muted-foreground/50 scrollbar-track-transparent bg-muted/20 dark:bg-background'
             )}
           >
             <div
               id="main-content"
-              className={cn(
-                '@container', // do not overflow the container
-                'w-full p-6 grow [&:has(>.no-container-padding)]:contents'
-                // className
-              )}
+              className="@container p-6 min-h-0 flex-1 [&:has(>.no-container-padding)]:p-0"
             >
               {children}
             </div>
