@@ -14,18 +14,17 @@ export default async function SettingsPage({
   try {
     const projectData = await fetchProject(tenantId, projectId);
     return (
-      <div className="max-w-2xl mx-auto">
-        <ProjectForm
-          projectId={projectData.data.id}
-          initialData={
-            {
-              ...projectData.data,
-              id: projectData.data.id as string,
-            } as ProjectFormData
-          }
-          tenantId={tenantId}
-        />
-      </div>
+      <ProjectForm
+        className="max-w-2xl mx-auto"
+        projectId={projectData.data.id}
+        initialData={
+          {
+            ...projectData.data,
+            id: projectData.data.id as string,
+          } as ProjectFormData
+        }
+        tenantId={tenantId}
+      />
     );
   } catch (error) {
     return (
