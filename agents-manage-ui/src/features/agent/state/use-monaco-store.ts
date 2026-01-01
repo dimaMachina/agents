@@ -75,11 +75,6 @@ const monacoState: StateCreator<MonacoState> = (set) => ({
       });
 
       // Define tokens for template variables
-      monaco.languages.setMonarchTokensProvider(TEMPLATE_LANGUAGE, {
-        tokenizer: {
-          root: [[/\{\{([^}]+)}}/, VARIABLE_TOKEN]],
-        },
-      });
       monaco.languages.registerCompletionItemProvider(TEMPLATE_LANGUAGE, {
         triggerCharacters: ['{'],
         provideCompletionItems(model, position) {
@@ -155,6 +150,14 @@ const monacoState: StateCreator<MonacoState> = (set) => ({
               'diffEditor.insertedTextBackground': '#3784ff19',
               'editorHoverWidget.background': '#fff',
             },
+            tokenColors: [
+              {
+                scope: token,
+                settings: { foreground: '#e67e22', fontStyle: 'bold' },
+              },
+              // @ts-expect-error -- exist
+              ...githubLightTheme.tokenColors,
+            ],
           },
           {
             ...githubDarkTheme,
@@ -166,6 +169,13 @@ const monacoState: StateCreator<MonacoState> = (set) => ({
               'diffEditor.insertedTextBackground': '#69a3ff4d',
               'editorHoverWidget.background': '#141416',
             },
+            tokenColors: [
+              {
+                scope: token,
+                settings: { foreground: '#f39c12', fontStyle: 'bold' },
+              },
+              ...githubDarkTheme.tokenColors,
+            ],
           },
         ],
         langs: [
@@ -179,6 +189,17 @@ const monacoState: StateCreator<MonacoState> = (set) => ({
             aliases: [TEMPLATE_LANGUAGE],
             name: 'Template',
             displayName: 'Template',
+            repository: {
+              ...repo,
+              inline: {
+                ...repo.inline,
+                patterns: [
+                  { name: token, match: '\\{\\{[^}]+}}' },
+                  // @ts-expect-error -- exist
+                  ...repo.inline.patterns,
+                ],
+              },
+            } as typeof repo,
           },
         ],
       });
