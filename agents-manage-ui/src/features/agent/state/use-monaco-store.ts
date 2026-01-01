@@ -37,6 +37,7 @@ const monacoState: StateCreator<MonacoState> = (set) => ({
         { default: monacoCompatibleSchema },
         { default: githubLightTheme },
         { default: githubDarkTheme },
+        { default: markdownShikiLangs },
       ] = await Promise.all([
         import('monaco-editor'),
         import('shiki'),
@@ -48,9 +49,9 @@ const monacoState: StateCreator<MonacoState> = (set) => ({
         }),
         import('shiki/themes/github-light-default.mjs'),
         import('shiki/themes/github-dark-default.mjs'),
+        import('shiki/langs/markdown.mjs'),
         import('@/lib/monaco-editor/setup-monaco-workers'),
       ]);
-      monaco.languages.register({ id: TEMPLATE_LANGUAGE });
       monaco.json.jsonDefaults.setDiagnosticsOptions({
         // Fixes when `$schema` is `https://json-schema.org/draft/2020-12/schema`
         // The schema uses meta-schema features ($dynamicRef) that are not yet supported by the validator
@@ -134,6 +135,10 @@ const monacoState: StateCreator<MonacoState> = (set) => ({
           };
         },
       });
+      const token = `${VARIABLE_TOKEN}.${TEMPLATE_LANGUAGE}`;
+      const [markdownShikiGrammar] = markdownShikiLangs;
+      const repo = markdownShikiGrammar.repository;
+
       /**
        * Create the highlighter
        * @see https://shiki.style/packages/monaco#usage
@@ -186,11 +191,11 @@ const monacoState: StateCreator<MonacoState> = (set) => ({
           'html-derivative',
           {
             ...markdownShikiGrammar,
-            aliases: [TEMPLATE_LANGUAGE],
-            name: 'Template',
+            aliases: [],
             displayName: 'Template',
+            name: TEMPLATE_LANGUAGE,
             repository: {
-              ...repo,
+              ...(repo as any),
               inline: {
                 ...repo.inline,
                 patterns: [
@@ -199,16 +204,11 @@ const monacoState: StateCreator<MonacoState> = (set) => ({
                   ...repo.inline.patterns,
                 ],
               },
-            } as typeof repo,
+            },
           },
         ],
       });
-      monaco.languages.register({
-        id: TEMPLATE_LANGUAGE,
-        aliases: ['Template'],
-        extensions: ['.template'],
-        mimetypes: ['text/markdown'],
-      });
+      monaco.languages.register({ id: TEMPLATE_LANGUAGE });
 
       // Register the themes from Shiki, and provide syntax highlighting for Monaco
       shikiToMonaco(highlighter, monaco);
