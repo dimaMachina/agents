@@ -153,9 +153,7 @@ const monacoState: StateCreator<MonacoState> = (set) => ({
               'editor.background': 'transparent',
               'diffEditor.insertedLineBackground': '#3784ff0d',
               'diffEditor.insertedTextBackground': '#3784ff19',
-              'scrollbarSlider.activeBackground': '#aaa5',
-              'scrollbarSlider.background': '#ccc5',
-              'scrollbarSlider.hoverBackground': '#bbb5',
+              'editorHoverWidget.background': '#fff',
             },
           },
           {
@@ -166,14 +164,31 @@ const monacoState: StateCreator<MonacoState> = (set) => ({
               'editor.background': 'transparent',
               'diffEditor.insertedLineBackground': '#69a3ff33',
               'diffEditor.insertedTextBackground': '#69a3ff4d',
-              'scrollbarSlider.activeBackground': '#ccc5',
-              'scrollbarSlider.background': '#aaa5',
-              'scrollbarSlider.hoverBackground': '#bbb5',
+              'editorHoverWidget.background': '#141416',
             },
           },
         ],
-        langs: ['javascript', 'typescript', 'json'],
+        langs: [
+          'javascript',
+          'typescript',
+          'json',
+          'html',
+          'html-derivative',
+          {
+            ...markdownShikiGrammar,
+            aliases: [TEMPLATE_LANGUAGE],
+            name: 'Template',
+            displayName: 'Template',
+          },
+        ],
       });
+      monaco.languages.register({
+        id: TEMPLATE_LANGUAGE,
+        aliases: ['Template'],
+        extensions: ['.template'],
+        mimetypes: ['text/markdown'],
+      });
+
       // Register the themes from Shiki, and provide syntax highlighting for Monaco
       shikiToMonaco(highlighter, monaco);
       // for cypress
