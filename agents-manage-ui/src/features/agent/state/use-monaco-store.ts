@@ -195,7 +195,7 @@ const monacoState: StateCreator<MonacoState> = (set) => ({
             displayName: 'Template',
             name: TEMPLATE_LANGUAGE,
             repository: {
-              ...(repo as any),
+              ...(repo as Record<string, unknown>),
               inline: {
                 ...repo.inline,
                 patterns: [
